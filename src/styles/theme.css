@@ -1,0 +1,213 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #FAFAF7;
+  --foreground: #1C1C2E;
+  --card: #FFFFFF;
+  --card-foreground: #1C1C2E;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1C2E;
+  --primary: #1A5C48;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F0EAD6;
+  --secondary-foreground: #1C1C2E;
+  --muted: #EDE8DC;
+  --muted-foreground: #6B6878;
+  --accent: #C8861E;
+  --accent-foreground: #FFFFFF;
+  --destructive: #C0392B;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(28, 28, 46, 0.12);
+  --input: transparent;
+  --input-background: #F4F1E8;
+  --switch-background: #C0BEB4;
+  --font-weight-medium: 600;
+  --font-weight-normal: 400;
+  --ring: #1A5C48;
+  --chart-1: #1A5C48;
+  --chart-2: #C8861E;
+  --chart-3: #2E7D6B;
+  --chart-4: #E8A83A;
+  --chart-5: #4AA88E;
+  --radius: 0.5rem;
+  --sidebar: #F0EAD6;
+  --sidebar-foreground: #1C1C2E;
+  --sidebar-primary: #1A5C48;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EDE8DC;
+  --sidebar-accent-foreground: #1C1C2E;
+  --sidebar-border: rgba(28, 28, 46, 0.1);
+  --sidebar-ring: #1A5C48;
+
+  /* Brand-specific tokens */
+  --brand-green: #1A5C48;
+  --brand-green-light: #2E7D6B;
+  --brand-green-pale: #E8F2EF;
+  --brand-gold: #C8861E;
+  --brand-gold-light: #E8A83A;
+  --brand-gold-pale: #FDF4E3;
+  --brand-parchment: #F5F0E4;
+  --brand-ink: #1C1C2E;
+}
+
+.dark {
+  --background: #111118;
+  --foreground: #F5F0E4;
+  --card: #1A1A24;
+  --card-foreground: #F5F0E4;
+  --popover: #1A1A24;
+  --popover-foreground: #F5F0E4;
+  --primary: #2E7D6B;
+  --primary-foreground: #FFFFFF;
+  --secondary: #252532;
+  --secondary-foreground: #F5F0E4;
+  --muted: #252532;
+  --muted-foreground: #9A9AAD;
+  --accent: #E8A83A;
+  --accent-foreground: #111118;
+  --destructive: #E74C3C;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(245, 240, 228, 0.1);
+  --input: rgba(245, 240, 228, 0.1);
+  --ring: #2E7D6B;
+  --font-weight-medium: 600;
+  --font-weight-normal: 400;
+  --chart-1: #2E7D6B;
+  --chart-2: #E8A83A;
+  --chart-3: #4AA88E;
+  --chart-4: #C8861E;
+  --chart-5: #1A5C48;
+  --sidebar: #1A1A24;
+  --sidebar-foreground: #F5F0E4;
+  --sidebar-primary: #2E7D6B;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #252532;
+  --sidebar-accent-foreground: #F5F0E4;
+  --sidebar-border: rgba(245, 240, 228, 0.1);
+  --sidebar-ring: #2E7D6B;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    direction: rtl;
+  }
+
+  html {
+    font-size: var(--font-size);
+    scroll-behavior: smooth;
+  }
+
+  h1 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  h2 {
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  h3 {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  input, textarea, select {
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--brand-green);
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-green-light);
+  }
+
+  /* Islamic geometric pattern for decorative use */
+  .pattern-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231A5C48' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
