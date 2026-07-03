@@ -1,5 +1,7 @@
-import { useState } from "react";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
+import { useState } from "react";
+
+import { intakeService } from "@/shared/services/intake.service";
 
 const contactInfo = [
   {
@@ -28,7 +30,11 @@ const contactInfo = [
   },
 ];
 
-export function Contact() {
+interface ContactProps {
+  setCurrentPage?: (page: string) => void;
+}
+
+export function Contact({ setCurrentPage }: ContactProps) {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -40,13 +46,18 @@ export function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 1500);
+    await intakeService.submitContact(form);
+    setLoading(false);
+    setSubmitted(true);
+  };
+
+  const handleDone = () => {
+    setSubmitted(false);
+    setForm({ name: "", email: "", phone: "", subject: "", type: "", message: "" });
+    if (setCurrentPage) setCurrentPage("home");
   };
 
   return (
@@ -136,7 +147,7 @@ export function Contact() {
                   شكرًا لتواصلك معنا. سيقوم فريقنا بالرد عليك في أقرب وقت ممكن.
                 </p>
                 <button
-                  onClick={() => { setSubmitted(false); setForm({ name: "", email: "", phone: "", subject: "", type: "", message: "" }); }}
+                  onClick={handleDone}
                   className="mt-6 px-6 py-2.5 border border-[var(--brand-green)] text-[var(--brand-green)] rounded-lg hover:bg-[var(--brand-green-pale)] transition-colors"
                   style={{ fontSize: "0.85rem" }}
                 >
@@ -150,10 +161,11 @@ export function Contact() {
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
+                    <label htmlFor="contact-name" className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
                       الاسم الكامل <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="contact-name"
                       required
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -163,10 +175,11 @@ export function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
+                    <label htmlFor="contact-email" className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
                       البريد الإلكتروني <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="contact-email"
                       required
                       type="email"
                       value={form.email}
@@ -180,10 +193,11 @@ export function Contact() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
+                    <label htmlFor="contact-phone" className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
                       رقم الهاتف
                     </label>
                     <input
+                      id="contact-phone"
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
                       placeholder="+٩٦٧ ..."
@@ -192,10 +206,11 @@ export function Contact() {
                     />
                   </div>
                   <div>
-                    <label className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
+                    <label htmlFor="contact-type" className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
                       نوع التواصل
                     </label>
                     <select
+                      id="contact-type"
                       value={form.type}
                       onChange={(e) => setForm({ ...form, type: e.target.value })}
                       className="w-full px-4 py-2.5 border border-[var(--border)] rounded-lg bg-[var(--input-background)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-green)]/40 focus:border-[var(--brand-green)] transition-colors"
@@ -212,10 +227,11 @@ export function Contact() {
                   </div>
                 </div>
                 <div>
-                  <label className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
+                  <label htmlFor="contact-subject" className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
                     الموضوع <span className="text-red-500">*</span>
                   </label>
                   <input
+                    id="contact-subject"
                     required
                     value={form.subject}
                     onChange={(e) => setForm({ ...form, subject: e.target.value })}
@@ -225,10 +241,11 @@ export function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
+                  <label htmlFor="contact-message" className="block mb-1.5 text-[var(--foreground)]" style={{ fontSize: "0.82rem" }}>
                     الرسالة <span className="text-red-500">*</span>
                   </label>
                   <textarea
+                    id="contact-message"
                     required
                     rows={4}
                     value={form.message}

@@ -24,8 +24,14 @@ const footerLinks = {
     { label: "الأخبار", href: "news" },
     { label: "قصص النجاح", href: "success" },
     { label: "التقارير والإصدارات", href: "reports" },
-    { label: "معرض الصور", href: "media" },
+    { label: "معرض الوسائط", href: "media" },
     { label: "تواصل معنا", href: "contact" },
+  ],
+  "روابط سريعة": [
+    { label: "التطوع", href: "volunteer" },
+    { label: "الوقف الخيري", href: "endowment" },
+    { label: "معرض الوسائط", href: "media" },
+    { label: "التقارير", href: "reports" },
   ],
 };
 
@@ -34,7 +40,18 @@ interface FooterProps {
 }
 
 export function Footer({ setCurrentPage }: FooterProps) {
-  const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // Newsletter subscription
+  const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
+    if (email) {
+      alert('شكرًا لاشتراكك في نشرتنا البريدية!');
+      form.reset();
+    }
+  };
 
   return (
     <footer
@@ -118,21 +135,25 @@ export function Footer({ setCurrentPage }: FooterProps) {
               كن أول من يعلم بأخبار المؤسسة وبرامجها وفعالياتها
             </div>
           </div>
-          <div className="flex gap-2 w-full sm:w-auto">
+          <form onSubmit={handleSubscribe} className="flex gap-2 w-full sm:w-auto">
             <input
+              id="newsletter-email"
+              name="email"
               type="email"
+              required
               placeholder="بريدك الإلكتروني"
               className="flex-1 sm:w-64 px-4 py-2.5 rounded-lg text-white bg-white/10 border border-white/20 placeholder-white/40 focus:outline-none focus:border-[var(--brand-gold)] transition-colors"
               style={{ fontSize: "0.82rem" }}
               dir="ltr"
             />
             <button
+              type="submit"
               className="px-5 py-2.5 bg-[var(--brand-gold)] text-white rounded-lg hover:bg-[var(--brand-gold-light)] transition-colors flex-shrink-0"
               style={{ fontSize: "0.82rem", fontWeight: 600 }}
             >
               اشتراك
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Bottom */}
@@ -144,14 +165,14 @@ export function Footer({ setCurrentPage }: FooterProps) {
             {["سياسة الخصوصية", "شروط الاستخدام", "إخلاء المسؤولية"].map((link) => (
               <button
                 key={link}
-                className="text-white/40 hover:text-white/65 transition-colors"
+                className="text-white/40 hover:text-white/65 transition-colors focus:outline-none focus:text-white/65"
                 style={{ fontSize: "0.72rem" }}
               >
                 {link}
               </button>
             ))}
             <button
-              onClick={scrollTop}
+              onClick={scrollToTop}
               className="w-9 h-9 rounded-full bg-white/10 hover:bg-[var(--brand-gold)] flex items-center justify-center transition-colors"
             >
               <ArrowUp className="w-4 h-4 text-white" />

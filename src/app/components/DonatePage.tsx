@@ -1,5 +1,7 @@
-import { useState } from "react";
 import { Heart, CheckCircle, CreditCard, Smartphone, Building2 } from "lucide-react";
+import { useState } from "react";
+
+import { intakeService } from "@/shared/services/intake.service";
 
 const amounts = [50, 100, 250, 500, 1000, 2500];
 const projects = [
@@ -22,11 +24,21 @@ export function DonatePage() {
 
   const finalAmount = customAmount ? parseFloat(customAmount) : amount || 0;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (finalAmount <= 0) return;
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSubmitted(true); }, 1800);
+    await intakeService.submitDonation({
+      donor: form.name,
+      email: form.email,
+      phone: form.phone,
+      amount: finalAmount,
+      project: projects.find((p) => p.id === project)?.label || project,
+      method: payMethod,
+      type: donationType,
+    });
+    setLoading(false);
+    setSubmitted(true);
   };
 
   if (submitted) {

@@ -1,5 +1,9 @@
 packages:
   - '.'
+allowBuilds:
+  '@tailwindcss/oxide': false
+  esbuild: false
+  unrs-resolver: true
 supportedArchitectures:
   os:
     - linux

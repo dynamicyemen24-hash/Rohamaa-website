@@ -30,8 +30,8 @@ export function AboutPage() {
       <section className="relative py-24 pt-32 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1512970648279-ff3398568f77?w=1600&h=600&fit=crop&auto=format"
-            alt="من نحن"
+            src="https://images.unsplash.com/photo-1642425145481-d59fbcfde153?w=1600&h=600&auto=format&fit=crop&q=80"
+            alt="قوة المجتمع اليمني"
             className="w-full h-full object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-[var(--brand-green-pale)]" style={{ opacity: 0.8 }} />
@@ -47,8 +47,8 @@ export function AboutPage() {
             مؤسسة رحماء بينهم
           </h1>
           <p className="text-[var(--muted-foreground)] max-w-2xl mx-auto" style={{ fontSize: "1rem", lineHeight: "1.8" }}>
-            منظمة إنسانية تنموية مستقلة تأسست لتكون صوتًا للمحتاجين وجسرًا بين المانحين والمستفيدين،
-            ونافذةً للتغيير الإيجابي في حياة آلاف الأسر.
+            منظمة إنسانية تنموية مستقلة تأسست لتكون صوتًا للمحتاجين وجسرًا بين المانحين والمستفيدين في اليمن،
+            ورافدًا للتغيير الإيجابي في حياة آلاف الأسر اليمنية.
           </p>
         </div>
       </section>
@@ -185,7 +185,7 @@ export function AboutPage() {
                 className="bg-white rounded-xl p-5 border border-[var(--border)] text-center hover:shadow-md transition-shadow"
               >
                 <div className="w-16 h-16 rounded-full bg-[var(--brand-green)] flex items-center justify-center mx-auto mb-4 text-white" style={{ fontSize: "1.3rem", fontWeight: 800 }}>
-                  {member.name.charAt(3)}
+                  {member.name.charAt(0)}
                 </div>
                 <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--foreground)", marginBottom: "0.25rem" }}>
                   {member.name}

@@ -3,23 +3,78 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#1A5C48" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="رحماء بينهم" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="رحماء بينهم" />
+    <meta name="msapplication-TileColor" content="#1A5C48" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
     <title>مؤسسة رحماء بينهم | Rohamaa Foundation</title>
     <meta name="description" content="مؤسسة رحماء بينهم — منظمة إنسانية تنموية تعمل على تخفيف معاناة الإنسان وتحقيق التنمية المستدامة من خلال برامج إغاثية وتعليمية وتنموية ودعوية متكاملة." />
-    <meta name="keywords" content="رحماء بينهم, خيري, إنساني, تنمية, إغاثة, تعليم, زكاة, تبرع, صدقة" />
+    <meta name="keywords" content="رحماء بينهم, خيري, إنساني, تنمية, إغاثة, تعليم, زكاة, تبرع, صدقة, مؤسسة, يمن" />
     <meta name="author" content="مؤسسة رحماء بينهم" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="language" content="Arabic" />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="مؤسسة رحماء بينهم" />
+    <meta property="og:title" content="مؤسسة رحماء بينهم | Rohamaa Foundation" />
     <meta property="og:description" content="منظمة إنسانية تنموية تعمل على تخفيف معاناة الإنسان وبناء مجتمعات مستدامة." />
+    <meta property="og:url" content="https://rohamaa.org" />
+    <meta property="og:site_name" content="مؤسسة رحماء بينهم" />
     <meta property="og:locale" content="ar_SA" />
+    <meta property="og:image" content="https://rohamaa.org/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="مؤسسة رحماء بينهم" />
+    <meta name="twitter:description" content="منظمة إنسانية تنموية تعمل على تخفيف معاناة الإنسان وبناء مجتمعات مستدامة." />
+    <meta name="twitter:image" content="https://rohamaa.org/og-image.jpg" />
+
+    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.rohamaa.org" />
+    <link rel="dns-prefetch" href="https://api.rohamaa.org" />
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/favicon.svg" as="image" type="image/svg+xml" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon-precomposed" href="/favicon.svg" />
+
+    <!-- Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').catch(function() {});
+        });
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Noscript fallback -->
+    <noscript>
+      <div style="text-align:center;padding:2rem;font-family:sans-serif;">
+        <h2>مؤسسة رحماء بينهم</h2>
+        <p>يرجى تفعيل JavaScript لعرض الموقع بشكل صحيح.</p>
+      </div>
+    </noscript>
   </body>
 </html>

@@ -1,50 +1,38 @@
-import { useState } from "react";
-import { Quote, ChevronRight, ChevronLeft, Star } from "lucide-react";
+import { Quote, ChevronRight, ChevronLeft, Star, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 
-const stories = [
-  {
-    id: 1,
-    name: "أم محمد",
-    location: "تعز",
-    program: "الإغاثة الإنسانية",
-    programColor: "#E74C3C",
-    quote:
-      "بعد أن فقدنا كل شيء جاء فريق رحماء بينهم كالمطر في الصحراء. لم يكتفوا بتقديم الطعام والكساء، بل أعادوا إلينا الأمل والكرامة. أطفالي اليوم يذهبون إلى المدرسة ويحلمون بمستقبل أفضل.",
-    image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=400&h=400&fit=crop&auto=format",
-    rating: 5,
-    category: "أسرة",
-    year: "٢٠٢٤",
-  },
-  {
-    id: 2,
-    name: "خالد ناصر",
-    location: "إب",
-    program: "التعليم والتأهيل",
-    programColor: "#2563EB",
-    quote:
-      "حصلت على منحة المؤسسة وتمكنت من إكمال دراستي الجامعية في تخصص الطب. اليوم أعود لمجتمعي طبيبًا متخصصًا وأسهم في علاج من احتجت إليهم يومًا. رحماء بينهم غيّرت مسار حياتي كلها.",
-    image: "https://images.unsplash.com/photo-1628717341663-0007b0ee2597?w=400&h=400&fit=crop&auto=format",
-    rating: 5,
-    category: "طالب",
-    year: "٢٠٢٣",
-  },
-  {
-    id: 3,
-    name: "فاطمة عبدالله",
-    location: "حضرموت",
-    program: "التنمية المجتمعية",
-    programColor: "var(--brand-green)",
-    quote:
-      "بدأت بمشروع خياطة صغير بدعم من برنامج تمكين المرأة. اليوم لديّ ورشة تضم ١٢ موظفة وأوفر دخلًا لأسري وللأسر الأخرى. أحلامي أصبحت حقيقة بفضل ثقة المؤسسة بي.",
-    image: "https://images.unsplash.com/photo-1593113616828-6f22bca04804?w=400&h=400&fit=crop&auto=format",
-    rating: 5,
-    category: "رائدة أعمال",
-    year: "٢٠٢٤",
-  },
-];
+import { storiesDashboardService } from "@/shared/services/dashboard.service";
 
-export function SuccessStories() {
+export function SuccessStories({ setCurrentPage }: { setCurrentPage: (p: string) => void } = { setCurrentPage: () => {} }) {
   const [active, setActive] = useState(0);
+  const [stories, setStories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    storiesDashboardService.getAll().then((items) => {
+      if (!cancelled) setStories(items.filter((item: any) => item.status !== 'DRAFT' && item.status !== 'draft'));
+    }).finally(() => {
+      if (!cancelled) setLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  if (loading) {
+    return (
+      <section
+        className="py-20 overflow-hidden"
+        style={{
+          direction: "rtl",
+          background: "linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-light) 100%)",
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-white" />
+        </div>
+      </section>
+    );
+  }
 
   const story = stories[active];
 
@@ -81,8 +69,8 @@ export function SuccessStories() {
               {/* Image */}
               <div className="md:col-span-2 relative h-64 md:h-auto min-h-56">
                 <img
-                  src={story.image}
-                  alt={story.name}
+                  src={story?.image}
+                  alt={story?.name}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/30 to-transparent" />
@@ -92,16 +80,16 @@ export function SuccessStories() {
                     style={{
                       fontSize: "0.7rem",
                       fontWeight: 700,
-                      background: story.programColor,
+                      background: "var(--brand-green)",
                     }}
                   >
-                    {story.program}
+                    {story?.program}
                   </span>
                   <span
                     className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white"
                     style={{ fontSize: "0.7rem" }}
                   >
-                    {story.category} • {story.year}
+                    {story?.category} • {story?.year}
                   </span>
                 </div>
               </div>
@@ -118,22 +106,22 @@ export function SuccessStories() {
                     className="text-[var(--foreground)] mb-6"
                     style={{ fontSize: "0.95rem", lineHeight: "1.9", fontStyle: "italic" }}
                   >
-                    "{story.quote}"
+                    &ldquo;{story?.quote}&rdquo;
                   </p>
                 </div>
 
                 {/* Author */}
                 <div>
                   <div className="flex items-center gap-1 mb-3">
-                    {Array.from({ length: story.rating }).map((_, i) => (
+                    {Array.from({ length: story?.rating || 5 }).map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-[var(--brand-gold)] text-[var(--brand-gold)]" />
                     ))}
                   </div>
                   <div style={{ fontWeight: 700, fontSize: "1rem", color: "var(--foreground)" }}>
-                    {story.name}
+                    {story?.name}
                   </div>
                   <div className="text-[var(--muted-foreground)]" style={{ fontSize: "0.8rem" }}>
-                    {story.location}
+                    {story?.location}
                   </div>
                 </div>
               </div>

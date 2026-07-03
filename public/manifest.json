@@ -1,0 +1,38 @@
+{
+  "name": "مؤسسة رحماء بينهم",
+  "short_name": "رحماء بينهم",
+  "description": "مؤسسة إنسانية تنموية تعمل على تخفيف معاناة الإنسان وبناء مجتمعات مستدامة في اليمن",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0F3D2E",
+  "orientation": "portrait-primary",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["charity", "nonprofit", "humanitarian"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "تبرع الآن",
+      "short_name": "تبرع",
+      "description": "قم بتقديم تبرعك للمؤسسة",
+      "url": "/?page=donate",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "الأخبار",
+      "short_name": "أخبار",
+      "description": "آخر أخبار المؤسسة",
+      "url": "/?page=news",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

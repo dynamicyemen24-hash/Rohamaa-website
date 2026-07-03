@@ -1,7 +1,11 @@
 import { Heart, BookOpen, Users, Mic, ChevronLeft, ArrowLeft } from "lucide-react";
+import { useState, useEffect, memo } from "react";
+
+import { createOptimizedImageSrc } from "@/app/hooks/useOptimizedImage";
+import { projectsDashboardService } from "@/shared/services/dashboard.service";
 
 interface ProgramsProps {
-  setCurrentPage: (page: string) => void;
+  readonly setCurrentPage: (page: string) => void;
 }
 
 const programs = [
@@ -9,57 +13,91 @@ const programs = [
     icon: Heart,
     title: "الإغاثة الإنسانية",
     description:
-      "تقديم المساعدات الطارئة للأسر المتضررة من الأزمات والكوارث، وضمان وصول الغذاء والدواء والمأوى للمحتاجين.",
+      "تقديم المساعدات الطارئة للأسر اليمنية المتضررة من الصراع والكوارث، وضمان وصول الغذاء والمأوى والدواء إلى المناطق الأكثر احتياجًا.",
     highlights: ["توزيع السلال الغذائية", "الكساء الشتوي", "الإيواء الطارئ", "الرعاية الصحية"],
     beneficiaries: "٤٨٠٠+",
     projects: "١٢٠+",
     color: "#E74C3C",
     bg: "#FEF2F2",
     href: "programs-relief",
-    image: "https://images.unsplash.com/photo-1628717341663-0007b0ee2597?w=600&h=400&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1733654039689-f0852bed75d6?w=600&h=400&auto=format&fit=crop&q=80",
   },
   {
     icon: BookOpen,
     title: "التعليم والتأهيل",
     description:
-      "دعم التعليم وتأهيل الكفاءات من خلال المنح الدراسية والتدريب المهني وبرامج محو الأمية وتطوير المناهج.",
+      "دعم التعليم لتأهيل الكفاءات اليمنية من خلال المنح الدراسية والتدريب المهني وبرامج محو الأمية وتطوير مهارات المعلمين.",
     highlights: ["منح دراسية", "تدريب مهني", "محو الأمية", "دعم المعلمين"],
     beneficiaries: "٣٢٠٠+",
     projects: "٨٥+",
     color: "#2563EB",
     bg: "#EFF6FF",
     href: "programs-education",
-    image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=600&h=400&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1611907671216-7ec6ef949163?w=600&h=400&auto=format&fit=crop&q=80",
   },
   {
     icon: Users,
     title: "التنمية المجتمعية",
     description:
-      "مشاريع التنمية المستدامة التي تمكّن المجتمعات وتعزز اعتمادها على الذات في مجالات الاقتصاد والصحة والبيئة.",
+      "مشاريع تنموية تمكّن المجتمعات اليمنية وتُعزز استقلاليتها في الاقتصاد والصحة والبيئة المحلية.",
     highlights: ["مشاريع تشغيل", "تمكين المرأة", "صحة المجتمع", "مشاريع بيئية"],
     beneficiaries: "٢٨٠٠+",
     projects: "٩٤+",
     color: "var(--brand-green)",
     bg: "var(--brand-green-pale)",
     href: "programs-development",
-    image: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=600&h=400&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1642425149556-b6f90e946859?w=600&h=400&auto=format&fit=crop&q=80",
   },
   {
     icon: Mic,
     title: "الدعوة والإرشاد",
     description:
-      "برامج التوعية الدينية والإرشاد الأسري والتعليم الشرعي، لتعزيز القيم الإسلامية وبناء الشخصية المسلمة المتوازنة.",
+      "برامج التوعية والدعوة التي تعزز القيم الإسلامية وتدعم الأسرة اليمنية في بناء مجتمع متماسك وقوي.",
     highlights: ["حلقات قرآنية", "إرشاد أسري", "دورات شرعية", "برامج شبابية"],
     beneficiaries: "٢٠٤٧+",
     projects: "٤٨+",
     color: "#7C3AED",
     bg: "#F5F3FF",
     href: "programs-dawah",
-    image: "https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=600&h=400&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1642425145481-d59fbcfde153?w=600&h=400&auto=format&fit=crop&q=80",
   },
 ];
 
+const DEFAULT_PROGRAM_IMAGE = "https://images.unsplash.com/photo-1642425149556-b6f90e946859?w=600&h=400&auto=format&fit=crop&q=80";
+
+const mapProjectToCard = (project: any) => ({
+  icon: Heart,
+  title: project.title || project.name || "مشروع جديد",
+  description: project.description || project.excerpt || "وصف مختصر للمشروع.",
+  highlights: [project.category || "عام", project.status || "قيد التنفيذ"],
+  beneficiaries: typeof project.beneficiaries === "number" ? `${project.beneficiaries}` : project.beneficiaries || "...",
+  projects: typeof project.progress === "number" ? `${project.progress}%` : project.status || "...",
+  color: "var(--brand-green)",
+  bg: "var(--brand-green-pale)",
+  href: "projects",
+  image: project.image || DEFAULT_PROGRAM_IMAGE,
+});
+
 export function Programs({ setCurrentPage }: ProgramsProps) {
+  const [programItems, setProgramItems] = useState<any[]>(programs);
+
+  useEffect(() => {
+    let cancelled = false;
+    projectsDashboardService
+      .getAll()
+      .then((items) => {
+        if (!cancelled && items.length > 0) {
+          setProgramItems(items.slice(0, 4).map(mapProjectToCard));
+        }
+      })
+      .catch(() => {
+        /* keep fallback programs */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section className="py-20 bg-[var(--background)]" style={{ direction: "rtl" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -92,13 +130,14 @@ export function Programs({ setCurrentPage }: ProgramsProps) {
 
         {/* Programs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {programs.map((program) => {
+          {programItems.map((program) => {
             const Icon = program.icon;
             return (
-              <div
+              <button
                 key={program.href}
-                className="group bg-white rounded-2xl border border-[var(--border)] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                type="button"
                 onClick={() => setCurrentPage(program.href)}
+                className="group text-left bg-white rounded-2xl border border-[var(--border)] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
@@ -127,7 +166,7 @@ export function Programs({ setCurrentPage }: ProgramsProps) {
 
                   {/* Highlights */}
                   <div className="flex flex-wrap gap-2 mb-5">
-                    {program.highlights.map((h) => (
+                    {program.highlights.map((h: string) => (
                       <span
                         key={h}
                         className="px-3 py-1 rounded-full"
@@ -163,16 +202,16 @@ export function Programs({ setCurrentPage }: ProgramsProps) {
                         </div>
                       </div>
                     </div>
-                    <button
+                    <span
                       className="flex items-center gap-1.5 text-[var(--brand-green)] group-hover:gap-3 transition-all"
                       style={{ fontSize: "0.82rem", fontWeight: 600 }}
                     >
                       اعرف أكثر
                       <ChevronLeft className="w-4 h-4" />
-                    </button>
+                    </span>
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>

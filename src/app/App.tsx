@@ -1,156 +1,195 @@
-import { useState, useEffect } from "react";
-import { Navbar } from "./components/Navbar";
-import { Hero } from "./components/Hero";
-import { ImpactStats } from "./components/ImpactStats";
-import { Programs } from "./components/Programs";
-import { SuccessStories } from "./components/SuccessStories";
-import { News, newsData } from "./components/News";
-import { Partners } from "./components/Partners";
-import { Contact } from "./components/Contact";
+import { Loader2 } from "lucide-react";
+import { useState, useEffect, lazy, Suspense, useCallback, memo } from "react";
+
+import { LoginPage } from "@/features/auth/components/LoginPage";
+import { useAuth } from "@/features/auth/contexts/AuthContext";
+
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Footer } from "./components/Footer";
-import { AdminDashboard } from "./components/AdminDashboard";
-import { DonatePage } from "./components/DonatePage";
-import { AboutPage } from "./components/AboutPage";
+import { Navbar } from "./components/Navbar";
+import { PageProgress } from "./components/PageProgress";
 
-function HomePage({ setCurrentPage }: { setCurrentPage: (p: string) => void }) {
-  return (
-    <>
-      <Hero setCurrentPage={setCurrentPage} />
-      <ImpactStats />
-      <Programs setCurrentPage={setCurrentPage} />
-      <SuccessStories />
-      <News setCurrentPage={setCurrentPage} />
-      <Partners setCurrentPage={setCurrentPage} />
-      <Contact />
-    </>
-  );
-}
+// Lazy load all pages for performance
+const HomePage = lazy(() =>
+  import("./pages/HomePage").then((m) => ({ default: m.HomePage }))
+);
+const AboutPage = lazy(() =>
+  import("./components/AboutPage").then((m) => ({ default: m.AboutPage }))
+);
+const Contact = lazy(() =>
+  import("./components/Contact").then((m) => ({ default: m.Contact }))
+);
+const DonatePage = lazy(() =>
+  import("./components/DonatePage").then((m) => ({ default: m.DonatePage }))
+);
+const News = lazy(() =>
+  import("./components/News").then((m) => ({ default: m.News }))
+);
+const Partners = lazy(() =>
+  import("./components/Partners").then((m) => ({ default: m.Partners }))
+);
+const Programs = lazy(() =>
+  import("./components/Programs").then((m) => ({ default: m.Programs }))
+);
+const SuccessStories = lazy(() =>
+  import("./components/SuccessStories").then((m) => ({ default: m.SuccessStories }))
+);
+const AdminDashboard = lazy(() =>
+  import("./components/AdminDashboard").then((m) => ({ default: m.AdminDashboard }))
+);
 
-function NewsPage() {
-  return (
-    <div className="min-h-screen pt-24 pb-16 bg-[var(--background)]" style={{ direction: "rtl" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="mb-10">
-          <span className="inline-block mb-3 text-[var(--brand-gold)] border border-[var(--brand-gold)]/30 bg-[var(--brand-gold-pale)] px-4 py-1 rounded-full" style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-            الأخبار
-          </span>
-          <h1 className="text-[var(--foreground)]">أخبار وفعاليات المؤسسة</h1>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {newsData.map((item) => (
-            <div key={item.id} className="bg-white rounded-2xl overflow-hidden border border-[var(--border)] hover:shadow-xl transition-shadow group cursor-pointer">
-              <div className="relative h-48 overflow-hidden">
-                <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute top-3 right-3">
-                  <span className="px-2.5 py-1 rounded-full text-white" style={{ fontSize: "0.68rem", fontWeight: 700, background: item.categoryColor }}>{item.category}</span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="text-[var(--foreground)] mb-2" style={{ fontSize: "0.9rem", fontWeight: 700, lineHeight: "1.4" }}>{item.title}</h3>
-                <p className="text-[var(--muted-foreground)] mb-3" style={{ fontSize: "0.78rem", lineHeight: "1.6" }}>{item.excerpt}</p>
-                <div className="flex items-center justify-between text-[var(--muted-foreground)]" style={{ fontSize: "0.7rem" }}>
-                  <span>{item.date}</span>
-                  <span>👁 {item.views}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+// Lazy load page-level components
+const ProjectsPage = lazy(() =>
+  import("./pages/ProjectsPage").then((m) => ({ default: m.ProjectsPage }))
+);
+const ReportsPage = lazy(() =>
+  import("./pages/ReportsPage").then((m) => ({ default: m.ReportsPage }))
+);
+const MediaPage = lazy(() =>
+  import("./pages/MediaPage").then((m) => ({ default: m.MediaPage }))
+);
+const VolunteerPage = lazy(() =>
+  import("./pages/VolunteerPage").then((m) => ({ default: m.VolunteerPage }))
+);
+const EndowmentPage = lazy(() =>
+  import("./pages/EndowmentPage").then((m) => ({ default: m.EndowmentPage }))
+);
 
-function PlaceholderPage({ title, subtitle }: { title: string; subtitle: string }) {
+function PageLoader() {
   return (
-    <div className="min-h-screen pt-32 pb-16 bg-[var(--background)] flex items-center justify-center" style={{ direction: "rtl" }}>
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
       <div className="text-center">
-        <div className="w-20 h-20 rounded-full bg-[var(--brand-green-pale)] flex items-center justify-center mx-auto mb-5">
-          <span style={{ fontSize: "2rem" }}>🌱</span>
-        </div>
-        <h2 className="text-[var(--foreground)] mb-3" style={{ fontWeight: 800 }}>{title}</h2>
-        <p className="text-[var(--muted-foreground)] max-w-sm" style={{ fontSize: "0.9rem" }}>{subtitle}</p>
+        <Loader2 className="w-10 h-10 animate-spin text-[var(--brand-green)] mx-auto mb-3" />
+        <p className="text-[var(--muted-foreground)]" style={{ fontSize: "0.85rem" }}>جاري التحميل...</p>
       </div>
     </div>
   );
 }
+
+const PageWrapper = memo(function PageWrapper({ children }: { children: React.ReactNode }) {
+  return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
+});
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
   const [adminOpen, setAdminOpen] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
+  const { isAuthenticated, isLoading, user } = useAuth();
+
+  // Prefetch pages on hover for faster navigation
+  const prefetchPage = useCallback((pageName: string) => {
+    const moduleMap: Record<string, () => Promise<any>> = {
+      home: () => import("./pages/HomePage"),
+      about: () => import("./components/AboutPage"),
+      donate: () => import("./components/DonatePage"),
+      news: () => import("./components/News"),
+      contact: () => import("./components/Contact"),
+      partners: () => import("./components/Partners"),
+      programs: () => import("./components/Programs"),
+      "programs-relief": () => import("./components/Programs"),
+      "programs-education": () => import("./components/Programs"),
+      "programs-development": () => import("./components/Programs"),
+      "programs-dawah": () => import("./components/Programs"),
+      success: () => import("./components/SuccessStories"),
+      projects: () => import("./pages/ProjectsPage"),
+      reports: () => import("./pages/ReportsPage"),
+      media: () => import("./pages/MediaPage"),
+      volunteer: () => import("./pages/VolunteerPage"),
+      endowment: () => import("./pages/EndowmentPage"),
+    };
+
+    const loadModule = moduleMap[pageName];
+    if (loadModule) {
+      loadModule().catch(() => {/* silent prefetch */});
+    }
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 
-  const renderPage = () => {
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && currentPage === 'login') {
+      setCurrentPage('home');
+      setAdminOpen(true);
+    }
+  }, [isAuthenticated, isLoading, currentPage]);
+
+  const handleSetPage = useCallback((page: string) => {
+    setPageLoading(true);
+    setCurrentPage(page);
+    setTimeout(() => setPageLoading(false), 150);
+  }, []);
+
+  const handleSetAdmin = useCallback((open: boolean) => {
+    setAdminOpen(open);
+  }, []);
+
+  const renderPage = useCallback(() => {
     switch (currentPage) {
       case "home":
-        return <HomePage setCurrentPage={setCurrentPage} />;
+        return <PageWrapper><HomePage setCurrentPage={handleSetPage} /></PageWrapper>;
       case "about":
-        return <AboutPage />;
+        return <PageWrapper><AboutPage /></PageWrapper>;
       case "donate":
-        return <DonatePage />;
+        return <PageWrapper><DonatePage /></PageWrapper>;
       case "news":
-        return <NewsPage />;
+        return <PageWrapper><News setCurrentPage={handleSetPage} /></PageWrapper>;
+      case "login":
+        return <LoginPage />;
       case "contact":
-        return (
-          <div className="pt-20">
-            <Contact />
-          </div>
-        );
+        return <PageWrapper><div className="pt-20"><Contact setCurrentPage={handleSetPage} /></div></PageWrapper>;
       case "partners":
-        return (
-          <div className="pt-20">
-            <Partners setCurrentPage={setCurrentPage} />
-          </div>
-        );
+        return <PageWrapper><div className="pt-20"><Partners setCurrentPage={handleSetPage} /></div></PageWrapper>;
       case "programs":
       case "programs-relief":
       case "programs-education":
       case "programs-development":
       case "programs-dawah":
-        return (
-          <div className="pt-20">
-            <Programs setCurrentPage={setCurrentPage} />
-          </div>
-        );
+        return <PageWrapper><div className="pt-20"><Programs setCurrentPage={handleSetPage} /></div></PageWrapper>;
       case "success":
-        return (
-          <div className="pt-20">
-            <SuccessStories />
-          </div>
-        );
+        return <PageWrapper><div className="pt-20"><SuccessStories setCurrentPage={handleSetPage} /></div></PageWrapper>;
       case "projects":
-        return <PlaceholderPage title="مشاريعنا" subtitle="تصفح جميع مشاريع المؤسسة وبرامجها التنموية والإنسانية" />;
+        return <PageWrapper><ProjectsPage /></PageWrapper>;
       case "reports":
-        return <PlaceholderPage title="التقارير والإصدارات" subtitle="التقارير السنوية والنشرات الدورية للمؤسسة" />;
+        return <PageWrapper><ReportsPage /></PageWrapper>;
       case "media":
-        return <PlaceholderPage title="معرض الوسائط" subtitle="صور وفيديوهات من أنشطة وبرامج المؤسسة" />;
+        return <PageWrapper><MediaPage /></PageWrapper>;
       case "volunteer":
-        return <PlaceholderPage title="التطوع" subtitle="انضم إلى فريق متطوعي مؤسسة رحماء بينهم" />;
+        return <PageWrapper><VolunteerPage /></PageWrapper>;
       case "endowment":
-        return <PlaceholderPage title="الوقف الخيري" subtitle="ساهم في الوقف الخيري للمؤسسة وتأمين مستقبل مشاريعها" />;
+        return <PageWrapper><EndowmentPage /></PageWrapper>;
       default:
-        return <HomePage setCurrentPage={setCurrentPage} />;
+        return <PageWrapper><HomePage setCurrentPage={handleSetPage} /></PageWrapper>;
     }
-  };
+  }, [currentPage, handleSetPage]);
 
-  const showFooter = !["donate"].includes(currentPage);
+  const showFooter = currentPage !== "donate" && currentPage !== "login";
 
   return (
-    <div className="min-h-screen bg-[var(--background)]" style={{ direction: "rtl" }}>
-      <Navbar
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        setAdminOpen={setAdminOpen}
-      />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-[var(--background)]" style={{ direction: "rtl" }}>
+        <PageProgress isLoading={pageLoading} />
 
-      <main>{renderPage()}</main>
+        <Navbar
+          currentPage={currentPage}
+          setCurrentPage={handleSetPage}
+          setAdminOpen={handleSetAdmin}
+          onHoverPage={prefetchPage}
+        />
 
-      {showFooter && <Footer setCurrentPage={setCurrentPage} />}
+        <main className="min-h-screen">
+          {renderPage()}
+        </main>
 
-      {adminOpen && <AdminDashboard onClose={() => setAdminOpen(false)} />}
-    </div>
+        {showFooter && <Footer setCurrentPage={handleSetPage} />}
+
+        {adminOpen && (
+          <Suspense fallback={<PageLoader />}>
+            <AdminDashboard onClose={() => setAdminOpen(false)} />
+          </Suspense>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 }

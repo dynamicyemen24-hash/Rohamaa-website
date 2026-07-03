@@ -1,40 +1,16 @@
-import { useState, useEffect, useRef } from "react";
-import { Users, FolderOpen, Handshake, Globe } from "lucide-react";
+import { Users, FolderOpen, Handshake, Heart } from "lucide-react";
+import { useState, useEffect, useRef, type ComponentType } from "react";
 
-const stats = [
-  {
-    icon: Users,
-    value: 12847,
-    display: "+١٢٨٤٧",
-    label: "مستفيد مباشر",
-    sub: "من مختلف المحافظات والمناطق",
-    color: "var(--brand-green)",
-  },
-  {
-    icon: FolderOpen,
-    value: 347,
-    display: "+٣٤٧",
-    label: "مشروع منجز",
-    sub: "في مجالات متنوعة ومؤثرة",
-    color: "var(--brand-gold)",
-  },
-  {
-    icon: Handshake,
-    value: 48,
-    display: "+٤٨",
-    label: "شريك استراتيجي",
-    sub: "من مؤسسات وجهات داعمة",
-    color: "var(--brand-green-light)",
-  },
-  {
-    icon: Globe,
-    value: 15,
-    display: "+١٥",
-    label: "محافظة مخدومة",
-    sub: "امتداد جغرافي واسع",
-    color: "var(--brand-gold)",
-  },
-];
+import { dashboardService } from "@/shared/services/dashboard.service";
+
+interface Stat {
+  icon: ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  value: number;
+  display: string;
+  label: string;
+  sub: string;
+  color: string;
+}
 
 function useCountUp(target: number, duration = 2000, start = false) {
   const [count, setCount] = useState(0);
@@ -52,7 +28,7 @@ function useCountUp(target: number, duration = 2000, start = false) {
   return count;
 }
 
-function StatCard({ stat, index, inView }: { stat: typeof stats[0]; index: number; inView: boolean }) {
+function StatCard({ stat, index, inView }: { readonly stat: Stat; readonly index: number; readonly inView: boolean }) {
   const Icon = stat.icon;
   const count = useCountUp(stat.value, 2000 + index * 200, inView);
 
@@ -88,17 +64,70 @@ function StatCard({ stat, index, inView }: { stat: typeof stats[0]; index: numbe
 }
 
 export function ImpactStats() {
+  const [metrics, setMetrics] = useState<{
+    totalBeneficiaries?: number;
+    activeProjects?: number;
+    totalPartners?: number;
+    totalVolunteers?: number;
+  } | null>(null);
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let cancelled = false;
+    dashboardService.getMetrics().then((data) => {
+      if (!cancelled) setMetrics(data);
+    }).catch(() => {
+      /* ignore */
+    });
+
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
       { threshold: 0.3 }
     );
     if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
   }, []);
+
+  const stats = [
+    {
+      icon: Users,
+      value: metrics?.totalBeneficiaries ?? 0,
+      display: metrics?.totalBeneficiaries ? `+${metrics.totalBeneficiaries.toLocaleString("ar-SA")}` : "...",
+      label: "مستفيد مباشر",
+      sub: "من مختلف المحافظات والمناطق",
+      color: "var(--brand-green)",
+    },
+    {
+      icon: FolderOpen,
+      value: metrics?.activeProjects ?? 0,
+      display: metrics?.activeProjects ? `+${metrics.activeProjects.toLocaleString("ar-SA")}` : "...",
+      label: "مشروع منجز",
+      sub: "في مجالات متنوعة ومؤثرة",
+      color: "var(--brand-gold)",
+    },
+    {
+      icon: Handshake,
+      value: metrics?.totalPartners ?? 0,
+      display: metrics?.totalPartners ? `+${metrics.totalPartners.toLocaleString("ar-SA")}` : "...",
+      label: "شريك استراتيجي",
+      sub: "من مؤسسات وجهات داعمة",
+      color: "var(--brand-green-light)",
+    },
+    {
+      icon: Heart,
+      value: metrics?.totalVolunteers ?? 0,
+      display: metrics?.totalVolunteers ? `+${metrics.totalVolunteers.toLocaleString("ar-SA")}` : "...",
+      label: "متطوع ومبادر",
+      sub: "فريق عمل المؤسسة",
+      color: "var(--brand-gold)",
+    },
+  ];
 
   return (
     <section className="py-20 bg-[var(--secondary)]" style={{ direction: "rtl" }} ref={ref}>
