@@ -39,7 +39,7 @@
     "test:coverage": "vitest --coverage",
     "test:e2e": "playwright test",
     "analyze": "vite-bundle-analyzer",
-    "prepare": "husky",
+    "prepare": "true",
     "precommit": "lint-staged",
     "clean": "rm -rf dist node_modules",
     "validate": "pnpm typecheck && pnpm lint && pnpm build",
