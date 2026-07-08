@@ -1,7 +1,16 @@
-// Pages barrel export for cleaner imports
-export { HomePage } from './HomePage';
-export { ProjectsPage } from './ProjectsPage';
-export { ReportsPage } from './ReportsPage';
-export { MediaPage } from './MediaPage';
-export { VolunteerPage } from './VolunteerPage';
-export { EndowmentPage } from './EndowmentPage';
+// Pages Barrel Export
+export { default as HomePage } from './HomePage';
+export { default as AboutPage } from './AboutPage';
+export { default as ProjectsPage } from './ProjectsPage';
+export { default as EndowmentPage } from './EndowmentPage';
+export { default as VolunteerPage } from './VolunteerPage';
+export { default as MediaPage } from './MediaPage';
+export { default as NewsPage } from './NewsPage';
+export { default as ReportsPage } from './ReportsPage';
+export { default as DonatePage } from './DonatePage';
+export { default as ContactPage } from './ContactPage';
+export { default as LoginPage } from '@/features/auth/components/LoginPage';
+
+// Admin Pages
+export { default as AdminDashboard } from '@/app/components/AdminDashboard';
+export { default as AdminPage } from './AdminPage';

@@ -1,14 +1,18 @@
 packages:
   - '.'
-allowBuilds:
-  '@tailwindcss/oxide': false
-  esbuild: false
-  unrs-resolver: true
+onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - esbuild
+  - unrs-resolver
+allowedDeprecatedVersions:
+  eslint: '>=8.0.0 <9.0.0'
 supportedArchitectures:
   os:
     - linux
+    - win32
   cpu:
     - x64
     - arm64
   libc:
     - glibc
+    - msvcrt

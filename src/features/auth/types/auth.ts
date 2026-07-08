@@ -2,15 +2,21 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: UserRole;
+  role: 'ADMIN' | 'EDITOR' | 'MANAGER' | 'VIEWER';
   permissions: Permission[];
+  avatar?: string;
+  createdAt?: string;
 }
-
-export type UserRole = 'ADMIN' | 'EDITOR' | 'VIEWER' | 'MANAGER';
 
 export interface Permission {
   resource: string;
-  actions: ('create' | 'read' | 'update' | 'delete' | 'approve' | 'publish')[];
+  actions: string[];
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
 }
 
 export interface AuthState {
@@ -20,8 +26,11 @@ export interface AuthState {
   token: string | null;
 }
 
-export interface LoginCredentials {
+export interface TokenPayload {
+  sub: string;
   email: string;
-  password: string;
-  rememberMe?: boolean;
+  role: string;
+  permissions: Permission[];
+  exp: number;
+  iat: number;
 }

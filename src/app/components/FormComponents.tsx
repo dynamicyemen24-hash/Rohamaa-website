@@ -14,7 +14,7 @@ export function TextField({ label, value, onChange, required, type = "text", pla
     else setError("");
   };
 
-  useEffect(() => { validate(value); }, [value]);
+  useEffect(() => { validate(value); }, [value, validate]);
 
   const inputClass = `w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--brand-green)]/30 focus:border-[var(--brand-green)] transition-colors ${
     error ? 'border-red-400 bg-red-50' : 'border-[var(--border)] bg-white'
@@ -74,8 +74,21 @@ export function FormModal({ isOpen, onClose, title, children, size = "md" }: {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative bg-white rounded-2xl p-6 w-full ${widthMap[size]} shadow-2xl max-h-[90vh] overflow-y-auto`} style={{ direction: "rtl" }}>
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClose(); }}
+      />
+      <div
+        className={`relative bg-white rounded-2xl p-6 w-full ${widthMap[size]} shadow-2xl max-h-[90vh] overflow-y-auto`}
+        style={{ direction: "rtl" }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="form-modal-title"
+      >
         <div className="flex items-center justify-between mb-5 sticky top-0 bg-white pb-3 border-b border-[var(--border)] z-10">
           <h3 style={{ fontWeight: 700, fontSize: "1rem" }}>{title}</h3>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--muted)] transition-colors">

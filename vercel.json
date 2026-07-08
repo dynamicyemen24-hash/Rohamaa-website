@@ -1,5 +1,27 @@
 {
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/admin/studio/(.*)",
+      "dest": "/admin/studio/index.html"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ],
   "rewrites": [
+    { "source": "/admin/studio/:path*", "destination": "/index.html" },
+    { "source": "/api/sanity-revalidate", "destination": "/api/sanity-revalidate.js" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -13,10 +35,11 @@
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" }
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';" }
       ]
     },
     {
@@ -25,5 +48,11 @@
         { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" }
       ]
     }
-  ]
+  ],
+  "env": {
+    "VITE_SANITY_PROJECT_ID": "@vite_sanity_project_id",
+    "VITE_SANITY_DATASET": "@vite_sanity_dataset",
+    "VITE_SANITY_API_VERSION": "@vite_sanity_api_version",
+    "SANITY_STUDIO_REVALIDATE_SECRET": "@sanity_studio_revalidate_secret"
+  }
 }

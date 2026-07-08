@@ -6,6 +6,10 @@ import { AuthProvider } from "@/features/auth/contexts/AuthContext";
 
 import App from "./app/App";
 import { ToastProvider } from "./app/components/Toast";
+import { initializeCoreServices } from "@/features/core";
+
+// Initialize enterprise core services
+initializeCoreServices().catch(() => {});
 
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", () => {

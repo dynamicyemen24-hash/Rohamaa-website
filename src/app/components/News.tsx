@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { newsService } from "@/features/news/services/news.service";
 
 interface NewsProps {
-  setCurrentPage: (page: string) => void;
+  setCurrentPage?: (page: string) => void;
 }
 
-export function News({ setCurrentPage }: NewsProps) {
+export const News = ({ setCurrentPage = () => {} }: NewsProps) => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 

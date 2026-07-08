@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 import { storiesDashboardService } from "@/shared/services/dashboard.service";
 
-export function SuccessStories({ setCurrentPage }: { setCurrentPage: (p: string) => void } = { setCurrentPage: () => {} }) {
+export const SuccessStories = ({ setCurrentPage = () => {} }: { setCurrentPage?: (p: string) => void }) => {
   const [active, setActive] = useState(0);
   const [stories, setStories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

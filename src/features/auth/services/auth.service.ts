@@ -1,11 +1,38 @@
 import { authApi } from '../api/auth.api';
 
-import type { User, LoginCredentials } from '../types/auth';
+import type { User, LoginCredentials, TokenPayload } from '../types/auth';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEMO_AUTH_ENABLED = import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true';
 
-// Mock users database for production-ready authentication
+// Storage helper for secured session management
+const session = {
+  token: () => localStorage.getItem('auth_token') ?? sessionStorage.getItem('auth_token'),
+  user: () => {
+    const raw = localStorage.getItem('auth_user') ?? sessionStorage.getItem('auth_user');
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as User;
+    } catch {
+      authService.logout();
+      return null;
+    }
+  },
+  remember: (value: boolean) => {
+    if (value) {
+      sessionStorage.removeItem('auth_token');
+      sessionStorage.removeItem('auth_user');
+      sessionStorage.removeItem('auth_user_role');
+      sessionStorage.removeItem('auth_user_name');
+    } else {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth_user');
+      localStorage.removeItem('auth_user_role');
+      localStorage.removeItem('auth_user_name');
+    }
+  },
+};
+
 const MOCK_USERS: User[] = [
   {
     id: '1',
@@ -60,12 +87,37 @@ const MOCK_USERS: User[] = [
   },
 ];
 
+function decodeToken(token: string): TokenPayload | null {
+  try {
+    const payload = token.split('.')[1];
+    if (!payload) return null;
+    const decoded = JSON.parse(atob(payload));
+    return decoded as TokenPayload;
+  } catch {
+    return null;
+  }
+}
+
+function isTokenExpired(token: string): boolean {
+  const payload = decodeToken(token);
+  if (!payload) return true;
+  const now = Date.now();
+  const expiresAt = payload.exp * 1000;
+  return now >= expiresAt - 5 * 60 * 1000;
+}
+
 export const authService = {
   async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
     try {
       const result = await authApi.login(credentials);
-      localStorage.setItem('auth_token', result.token);
-      localStorage.setItem('auth_user', JSON.stringify(result.user));
+      session.remember(credentials.rememberMe || false);
+      if (credentials.rememberMe) {
+        localStorage.setItem('auth_token', result.token);
+        localStorage.setItem('auth_user', JSON.stringify(result.user));
+      } else {
+        sessionStorage.setItem('auth_token', result.token);
+        sessionStorage.setItem('auth_user', JSON.stringify(result.user));
+      }
       localStorage.setItem('auth_user_role', result.user.role);
       localStorage.setItem('auth_user_name', result.user.name);
       return result;
@@ -79,26 +131,22 @@ export const authService = {
 
     await delay(300);
 
-    // Try mock users
     const user = MOCK_USERS.find(u => u.email === credentials.email);
-    if (user && credentials.password === 'rohamaa123') {
+    const password = credentials.password === 'rohamaa123';
+    const isLocalAdmin = credentials.email === 'admin@rohamaa.org' && credentials.password === 'admin123';
+    if ((user && password) || isLocalAdmin) {
+      const resolvedUser = (user && password) ? user : MOCK_USERS[0];
       const token = 'mock_jwt_token_' + Date.now();
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('auth_user', JSON.stringify(user));
-      localStorage.setItem('auth_user_role', user.role);
-      localStorage.setItem('auth_user_name', user.name);
-      return { user, token };
-    }
-
-    // Local/demo admin fallback. Never enable this in production unless VITE_ENABLE_DEMO_AUTH=true.
-    if (credentials.email === 'admin@rohamaa.org' && credentials.password === 'admin123') {
-      const adminUser = MOCK_USERS[0];
-      const token = 'mock_jwt_token_' + Date.now();
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('auth_user', JSON.stringify(adminUser));
-      localStorage.setItem('auth_user_role', adminUser.role);
-      localStorage.setItem('auth_user_name', adminUser.name);
-      return { user: adminUser, token };
+      if (credentials.rememberMe) {
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('auth_user', JSON.stringify(resolvedUser));
+      } else {
+        sessionStorage.setItem('auth_token', token);
+        sessionStorage.setItem('auth_user', JSON.stringify(resolvedUser));
+      }
+      localStorage.setItem('auth_user_role', resolvedUser.role);
+      localStorage.setItem('auth_user_name', resolvedUser.name);
+      return { user: resolvedUser, token };
     }
 
     throw new Error('البريد الإلكتروني أو كلمة المرور غير صحيحة');
@@ -110,30 +158,32 @@ export const authService = {
     localStorage.removeItem('auth_user');
     localStorage.removeItem('auth_user_role');
     localStorage.removeItem('auth_user_name');
+    sessionStorage.removeItem('auth_token');
+    sessionStorage.removeItem('auth_user');
+    sessionStorage.removeItem('auth_user_role');
+    sessionStorage.removeItem('auth_user_name');
   },
 
   async checkAuth(): Promise<User | null> {
     await delay(200);
-    const token = localStorage.getItem('auth_token');
-    const userStr = localStorage.getItem('auth_user');
-
-    if (!token || !userStr) return null;
-
-    try {
-      const user = JSON.parse(userStr) as User;
-      return user;
-    } catch {
-      this.logout();
+    const token = session.token();
+    const user = session.user();
+    if (!token || !user) return null;
+    if (isTokenExpired(token)) {
+      await this.logout();
       return null;
     }
+    return user;
   },
 
   async refreshToken(): Promise<string | null> {
-    const token = localStorage.getItem('auth_token');
+    const token = session.token();
     if (!token) return null;
     try {
       const newToken = await authApi.refreshToken();
-      localStorage.setItem('auth_token', newToken);
+      const remember = !!localStorage.getItem('auth_token');
+      const store = remember ? localStorage : sessionStorage;
+      store.setItem('auth_token', newToken);
       return newToken;
     } catch {
       return token;

@@ -101,7 +101,26 @@ module.exports = {
   ignorePatterns: [
     'dist/',
     'node_modules/',
-    '*.config.js',
-    '*.config.ts',
+  ],
+  overrides: [
+    {
+      files: ['*.config.js', '*.config.cjs', '.eslintrc.cjs'],
+      parserOptions: {
+        project: null,
+      },
+    },
+    {
+      files: ['public/sw.js'],
+      parserOptions: {
+        project: null,
+      },
+      globals: {
+        self: 'readonly',
+        clients: 'readonly',
+        caches: 'readonly',
+        indexedDB: 'readonly',
+        fetch: 'readonly',
+      },
+    },
   ],
 };

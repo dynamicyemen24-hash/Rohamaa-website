@@ -74,7 +74,7 @@ const mapProjectToCard = (project: any) => ({
   projects: typeof project.progress === "number" ? `${project.progress}%` : project.status || "...",
   color: "var(--brand-green)",
   bg: "var(--brand-green-pale)",
-  href: "projects",
+  href: `projects-${project.id || Math.random().toString(36).slice(2)}`,
   image: project.image || DEFAULT_PROGRAM_IMAGE,
 });
 

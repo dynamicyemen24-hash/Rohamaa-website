@@ -1,38 +1,143 @@
 {
-  "name": "مؤسسة رحماء بينهم",
+  "name": "رحماء بينهم - منصة إغاثة وتنمية",
   "short_name": "رحماء بينهم",
-  "description": "مؤسسة إنسانية تنموية تعمل على تخفيف معاناة الإنسان وبناء مجتمعات مستدامة في اليمن",
+  "description": "منصة رقمية متكاملة لإدارة العمل الإنساني والخيري - حملة رحماء بينهم الخيرية",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#ffffff",
-  "theme_color": "#0F3D2E",
+  "theme_color": "#059669",
   "orientation": "portrait-primary",
   "dir": "rtl",
   "lang": "ar",
+  "scope": "/",
+  "categories": ["charity", "nonprofit", "social", "education"],
+  "screenshots": [
+    {
+      "src": "/screenshots/home-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "الصفحة الرئيسية"
+    },
+    {
+      "src": "/screenshots/home-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "الصفحة الرئيسية"
+    }
+  ],
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/icons/icon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-1024x1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["charity", "nonprofit", "humanitarian"],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "تبرع الآن",
       "short_name": "تبرع",
-      "description": "قم بتقديم تبرعك للمؤسسة",
-      "url": "/?page=donate",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "description": "ساهم في دعم المشاريع الخيرية",
+      "url": "/donate",
+      "icons": [{ "src": "/icons/donate-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "الأخبار",
-      "short_name": "أخبار",
-      "description": "آخر أخبار المؤسسة",
-      "url": "/?page=news",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "name": "حاسبة الزكاة",
+      "short_name": "الزكاة",
+      "description": "احسب زكاتك بسهولة",
+      "url": "/zakat",
+      "icons": [{ "src": "/icons/zakat-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "برامجنا",
+      "short_name": "البرامج",
+      "description": "استعرض برامجنا ومشاريعنا",
+      "url": "/programs",
+      "icons": [{ "src": "/icons/programs-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "قصص النجاح",
+      "short_name": "القصص",
+      "description": "قصص نجاح المستفيدين",
+      "url": "/transparency",
+      "icons": [{ "src": "/icons/stories-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://rohamaa.org/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+rohamaa",
+      "url": "/?action=%s"
     }
   ]
 }

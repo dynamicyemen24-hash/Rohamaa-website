@@ -2,6 +2,7 @@ import { Menu, X, ChevronDown, Heart } from "lucide-react";
 import { useState, useEffect, useCallback, memo } from "react";
 
 import { useThrottle } from "@/app/hooks/useDebounce";
+import { useAuth } from "@/features/auth/contexts/AuthContext";
 
 interface NavbarProps {
   currentPage: string;
@@ -87,6 +88,7 @@ export function Navbar({ currentPage, setCurrentPage, setAdminOpen, onHoverPage 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
 
   const handleScroll = useCallback(() => {
     setScrolled(window.scrollY > 40);
@@ -105,6 +107,14 @@ export function Navbar({ currentPage, setCurrentPage, setAdminOpen, onHoverPage 
     setOpenDropdown(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
     onHoverPage?.(href);
+  };
+
+  const handleAdminAccess = () => {
+    if (isAuthenticated) {
+      setAdminOpen(true);
+    } else {
+      setCurrentPage("login");
+    }
   };
 
   return (
@@ -201,7 +211,7 @@ export function Navbar({ currentPage, setCurrentPage, setAdminOpen, onHoverPage 
               تبرع الآن
             </button>
             <button
-              onClick={() => setAdminOpen(true)}
+              onClick={handleAdminAccess}
               className="hidden sm:block px-3 py-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--brand-green)] border border-[var(--border)] rounded-lg hover:border-[var(--brand-green)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--brand-green)]/30"
             >
               لوحة التحكم
@@ -270,7 +280,7 @@ export function Navbar({ currentPage, setCurrentPage, setAdminOpen, onHoverPage 
                 تبرع الآن
               </button>
               <button
-                onClick={() => { setAdminOpen(true); setMobileOpen(false); }}
+                onClick={() => { handleAdminAccess(); setMobileOpen(false); }}
                 className="w-full py-2.5 border border-[var(--border)] text-[var(--muted-foreground)] rounded-lg text-sm hover:border-[var(--brand-green)] hover:text-[var(--brand-green)] transition-colors"
               >
                 لوحة التحكم

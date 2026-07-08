@@ -1,6 +1,8 @@
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Component, ReactNode } from 'react';
 
+import { errorTracker } from '@/utils/errorTracking';
+
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
@@ -22,7 +24,10 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: any) {
-    console.error('Error caught by boundary:', error, errorInfo);
+    errorTracker.captureException(error, {
+      componentStack: errorInfo.componentStack,
+      boundary: 'ErrorBoundary',
+    });
   }
 
   render() {

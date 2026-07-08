@@ -7,7 +7,7 @@ import {
   FileText, Image, MessageSquare, Users, Settings,
   X, Plus, Edit2, Trash2, Eye, CheckCircle,
   Globe, ChevronDown, Search, Bell, RefreshCw, AlertTriangle,
-  UserCheck, DollarSign, Heart,
+  UserCheck, DollarSign, Heart, Activity,
 } from "lucide-react";
 import { useState, useEffect, useCallback, ReactNode } from "react";
 
@@ -29,6 +29,7 @@ import { postgresService } from "@/shared/services/postgres.service";
 
 import AdminDashboardExtras from "./AdminDashboardExtras";
 import { useToast, useConfirm } from "./Toast";
+import { AdminAnalytics } from "./AdminAnalytics";
 
 
 
@@ -712,6 +713,7 @@ function DashboardOverview({ onNavigate }: { onNavigate: (id: string) => void })
 // ============================================================
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "لوحة التحكم", icon: LayoutDashboard },
+  { id: "analytics", label: "تحليل النشاط", icon: Activity },
   { id: "news", label: "إدارة الأخبار", icon: Newspaper },
   { id: "stories", label: "قصص النجاح", icon: Star },
   { id: "projects", label: "إدارة المشاريع", icon: FolderOpen },
@@ -1086,6 +1088,9 @@ export function AdminDashboard({ onClose }: { onClose: () => void }) {
     switch (activeSection) {
       case "dashboard":
         return <DashboardOverview onNavigate={setActiveSection} />;
+
+      case "analytics":
+        return <AdminAnalytics />;
 
       case "news":
         return (

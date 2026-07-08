@@ -34,7 +34,7 @@ interface ContactProps {
   setCurrentPage?: (page: string) => void;
 }
 
-export function Contact({ setCurrentPage }: ContactProps) {
+export const Contact = ({ setCurrentPage = () => {} }: ContactProps) => {
   const [form, setForm] = useState({
     name: "",
     email: "",

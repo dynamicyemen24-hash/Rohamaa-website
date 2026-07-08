@@ -7,6 +7,7 @@ node_modules/
 dist/
 build/
 out/
+dist-node/
 
 # Environment variables
 .env
@@ -49,3 +50,15 @@ tmp/
 # package-lock.json
 # pnpm-lock.yaml
 # yarn.lock
+
+# pnpm store (local app data cache) - NOT a project directory
+%LOCALAPPDATA%/pnpm-store/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# pnpm workspace store (local cache, NOT a project directory)
+.pnpm-store/
+
+# Agent/tool artifacts
+.agents/
