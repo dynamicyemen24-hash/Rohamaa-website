@@ -17,11 +17,20 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/index.html"
     }
   ],
   "rewrites": [
     { "source": "/admin/studio/:path*", "destination": "/index.html" },
+    { "source": "/admin/:path*", "destination": "/index.html" },
     { "source": "/api/sanity-revalidate", "destination": "/api/sanity-revalidate.js" },
+    { "source": "/api/create-checkout-session", "destination": "/api/create-checkout-session.js" },
+    { "source": "/api/donations", "destination": "/api/donations.js" },
+    { "source": "/api/notifications", "destination": "/api/notifications.js" },
+    { "source": "/api/notifications/subscribe", "destination": "/api/notifications/subscribe.js" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -39,7 +48,7 @@
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://cdn.sanity.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.sanity.io https://*.supabase.co wss://*.supabase.co; frame-src https://js.stripe.com https://hooks.stripe.com; base-uri 'self'; form-action 'self';" }
       ]
     },
     {
@@ -53,6 +62,13 @@
     "VITE_SANITY_PROJECT_ID": "@vite_sanity_project_id",
     "VITE_SANITY_DATASET": "@vite_sanity_dataset",
     "VITE_SANITY_API_VERSION": "@vite_sanity_api_version",
-    "SANITY_STUDIO_REVALIDATE_SECRET": "@sanity_studio_revalidate_secret"
+    "VITE_SUPABASE_URL": "@vite_supabase_url",
+    "VITE_SUPABASE_ANON_KEY": "@vite_supabase_anon_key",
+    "VITE_STRIPE_PUBLIC_KEY": "@vite_stripe_public_key",
+    "STRIPE_SECRET_KEY": "@stripe_secret_key",
+    "DATABASE_URL": "@neon_database_url",
+    "SANITY_STUDIO_REVALIDATE_SECRET": "@sanity_studio_revalidate_secret",
+    "VITE_VAPID_PUBLIC_KEY": "@vite_vapid_public_key",
+    "DATABASE_API_SECRET": "@database_api_secret"
   }
 }

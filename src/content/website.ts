@@ -183,7 +183,7 @@ export const SEED_SUCCESS_STORIES = [
     year: '١٤٤٥هـ',
     location: 'تعز',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1642425145481-d59fbcfde153?w=600&h=400&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?w=600&h=400&auto=format&fit=crop&q=80',
     status: 'PUBLISHED',
   },
   {
@@ -198,7 +198,7 @@ export const SEED_SUCCESS_STORIES = [
     year: '١٤٤٦هـ',
     location: 'صنعاء',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=600&h=400&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&auto=format&fit=crop&q=80',
     status: 'PUBLISHED',
   },
   {
@@ -213,7 +213,7 @@ export const SEED_SUCCESS_STORIES = [
     year: '١٤٤٦هـ',
     location: 'حجة',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1733654039689-f0852bed75d6?w=600&h=400&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&h=400&auto=format&fit=crop&q=80',
     status: 'PUBLISHED',
   },
   {
@@ -228,17 +228,17 @@ export const SEED_SUCCESS_STORIES = [
     year: '١٤٤٥هـ',
     location: 'صنعاء',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1642425145481-d59fbcfde153?w=600&h=400&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1542815391-5e04e9682458?w=600&h=400&auto=format&fit=crop&q=80',
     status: 'DRAFT',
   },
 ];
 export const SEED_PARTNERS = [
-  { id: '1', name: 'منظمة الإغاثة الخيرية', logo: '', type: 'شريك إستراتيجي', status: 'active', url: '#' },
-  { id: '2', name: 'صندوق التنمية البشرية', logo: '', type: 'جهة ممولة', status: 'active', url: '#' },
-  { id: '3', name: 'جامعة العلوم والتكنولوجيا', logo: '', type: 'شريك تنفيذي', status: 'active', url: '#' },
-  { id: '4', name: 'هيئة الأعمال الخيرية', logo: '', type: 'شريك داعم', status: 'active', url: '#' },
-  { id: '5', name: 'اللجنة الإغاثية العربية', logo: '', type: 'شريك إستراتيجي', status: 'active', url: '#' },
-  { id: '6', name: 'بنك الطعام اليمني', logo: '', type: 'شريك تنفيذي', status: 'active', url: '#' },
+  { id: '1', name: 'منظمة الإغاثة الخيرية', logo: 'https://images.unsplash.com/photo-1609159093838-56802680a0f3?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك إستراتيجي', status: 'active', url: '#' },
+  { id: '2', name: 'صندوق التنمية البشرية', logo: 'https://images.unsplash.com/photo-1554224776-3d0a3226fb75?w=200&h=100&auto=format&fit=crop&q=80', type: 'جهة ممولة', status: 'active', url: '#' },
+  { id: '3', name: 'جامعة العلوم والتكنولوجيا', logo: 'https://images.unsplash.com/photo-1523050859058-8321774f46e3?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك تنفيذي', status: 'active', url: '#' },
+  { id: '4', name: 'هيئة الأعمال الخيرية', logo: 'https://images.unsplash.com/photo-1582211594533-268f4f124cb8?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك داعم', status: 'active', url: '#' },
+  { id: '5', name: 'اللجنة الإغاثية العربية', logo: 'https://images.unsplash.com/photo-1593642634327-79d9c95dc8de?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك إستراتيجي', status: 'active', url: '#' },
+  { id: '6', name: 'بنك الطعام اليمني', logo: 'https://images.unsplash.com/photo-1593113598308-e5fef1e7e334?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك تنفيذي', status: 'active', url: '#' },
 ];
 export const SEED_IMPACT = {
   beneficiaries: 12847,
@@ -256,7 +256,7 @@ export const SEED_MEDIA = [
   { id: '1', title: 'حفل تكريم المتفوقين', type: 'image', url: 'https://images.unsplash.com/photo-1642425149790-6067ff132526?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٦/٣/١٥', size: '١.٢ م.ب' },
   { id: '2', title: 'توزيع المساعدات في تعز', type: 'image', url: 'https://images.unsplash.com/photo-1733654039689-f0852bed75d6?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٦/٢/٢٠', size: '٠.٩ م.ب' },
   { id: '3', title: 'برنامج التدريب المهني', type: 'image', url: 'https://images.unsplash.com/photo-1642425150068-422fef94a8ea?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٦/١/٥', size: '١.١ م.ب' },
-  { id: '4', title: 'تعريف بالمؤسسة', type: 'video', url: 'https://images.unsplash.com/photo-1642425145481-d59fbcfde153?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٥/١١/١', size: '٢٥ م.ب' },
+  { id: '4', title: 'تعريف بالمؤسسة', type: 'video', url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٥/١١/١', size: '٢٥ م.ب' },
 ];
 export const SEED_DONATIONS = [
   { id: '1', donor: 'أحمد محمد علي', amount: 500, project: 'الصندوق العام', method: 'card', date: '١٤٤٦/٤/١', status: 'completed' },

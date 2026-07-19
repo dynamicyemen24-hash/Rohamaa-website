@@ -45,10 +45,6 @@ module.exports = {
       node: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
-      alias: {
-        map: [['@', './src']],
-        extensions: ['.ts', '.tsx', '.js', '.jsx'],
-      },
     },
   },
   rules: {
@@ -110,6 +106,12 @@ module.exports = {
       },
     },
     {
+      files: ['sanity.cli.ts', 'sanity.config.ts'],
+      parserOptions: {
+        project: null,
+      },
+    },
+    {
       files: ['public/sw.js'],
       parserOptions: {
         project: null,
@@ -120,6 +122,19 @@ module.exports = {
         caches: 'readonly',
         indexedDB: 'readonly',
         fetch: 'readonly',
+      },
+    },
+    {
+      files: ['api/**/*.js', 'api/**/*.cjs'],
+      parserOptions: {
+        project: null,
+      },
+      globals: {
+        require: 'readonly',
+        module: 'readonly',
+        __dirname: 'readonly',
+        process: 'readonly',
+        console: 'readonly',
       },
     },
   ],

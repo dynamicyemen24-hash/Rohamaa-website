@@ -1,0 +1,183 @@
+/* ============================================================
+   Card Component Styles
+   ============================================================ */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--card-foreground);
+}
+
+.card-description {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+}
+
+/* ============================================================
+   Loading Skeleton Styles (Enhanced)
+   ============================================================ */
+.skeleton {
+  background: linear-gradient(90deg, var(--muted) 25%, var(--background) 50%, var(--muted) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-text:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Z-Index Layers
+   ============================================================ */
+.z-dropdown {
+  z-index: 1000;
+}
+
+.z-sticky {
+  z-index: 1020;
+}
+
+.z-fixed {
+  z-index: 1030;
+}
+
+.z-modal-backdrop {
+  z-index: 1040;
+}
+
+.z-modal {
+  z-index: 1050;
+}
+
+.z-popover {
+  z-index: 1060;
+}
+
+.z-tooltip {
+  z-index: 1070;
+}
+
+.z-popup {
+  z-index: 1080;
+}
+
+/* ============================================================
+   Responsive Utilities
+   ============================================================ */
+@media (max-width: 640px) {
+  .sm\:hidden {
+    display: none;
+  }
+  
+  .sm\:block {
+    display: block;
+  }
+  
+  .sm\:flex {
+    display: flex;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .md\:hidden {
+    display: none;
+  }
+  
+  .md\:block {
+    display: block;
+  }
+}
+
+@media (min-width: 1025px) {
+  .lg\:hidden {
+    display: none;
+  }
+  
+  .lg\:block {
+    display: block;
+  }
+}
+
+/* ============================================================
+   Accessibility Focus Styles
+   ============================================================ */
+.focus-visible {
+  outline: 2px solid var(--brand-green);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Print Styles
+   ============================================================ */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break-inside-avoid {
+    break-inside: avoid;
+  }
+  
+  .print-page-break-after {
+    page-break-after: always;
+  }
+  
+  /* Ensure colors print correctly */
+  body {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+/* ============================================================
+   Reduced Motion Support
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   High Contrast Support
+   ============================================================ */
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+  }
+  
+  .btn-primary {
+    border: 2px solid var(--foreground);
+  }
+}

@@ -27,9 +27,10 @@ import {
 } from "@/shared/services/dashboard.service";
 import { postgresService } from "@/shared/services/postgres.service";
 
-import AdminDashboardExtras from "./AdminDashboardExtras";
-import { useToast, useConfirm } from "./Toast";
 import { AdminAnalytics } from "./AdminAnalytics";
+import AdminDashboardExtras from "./AdminDashboardExtras";
+import NotificationsPanel from "./NotificationsPanel";
+import { useToast, useConfirm } from "./Toast";
 
 
 
@@ -45,11 +46,10 @@ import { AdminAnalytics } from "./AdminAnalytics";
 function Modal({ isOpen, onClose, title, children, size = "md" }: {
   readonly isOpen: boolean; readonly onClose: () => void; readonly title: string; readonly children: ReactNode; readonly size?: "sm" | "md" | "lg";
 }) {
-  if (!isOpen) return null;
   const widthMap = { sm: "max-w-md", md: "max-w-lg", lg: "max-w-2xl" };
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" role="dialog" aria-modal="true" tabIndex={-1}>
-      <button type="button" aria-label="إغلاق" className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+    <dialog className="fixed inset-0 z-[200] flex items-center justify-center p-4 m-0" open={isOpen} onClose={onClose}>
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <div className={`relative bg-white rounded-2xl p-6 w-full ${widthMap[size]} shadow-2xl max-h-[90vh] overflow-y-auto`} style={{ direction: "rtl" }}>
         <div className="flex items-center justify-between mb-5 sticky top-0 bg-white pb-3 border-b border-[var(--border)] z-10">
           <h3 style={{ fontWeight: 700, fontSize: "1rem" }}>{title}</h3>
@@ -59,7 +59,7 @@ function Modal({ isOpen, onClose, title, children, size = "md" }: {
         </div>
         {children}
       </div>
-    </div>
+    </dialog>
   );
 }
 
@@ -746,12 +746,13 @@ function renderSelect(label: string, value: string, onChange: (v: string) => voi
 // ============================================================
 // AdminDashboard الرئيسي
 // ============================================================
-export function AdminDashboard({ onClose }: { onClose: () => void }) {
+export function AdminDashboard({ onClose, isFullPage = false }: { onClose: () => void; isFullPage?: boolean }) {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editModal, setEditModal] = useState<{ item: any; section: string } | null>(null);
   const [viewModal, setViewModal] = useState<{ item: any; title: string } | null>(null);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   // حالات البيانات لكل قسم
   const [donations, setDonations] = useState<any[]>([]);
@@ -924,6 +925,29 @@ export function AdminDashboard({ onClose }: { onClose: () => void }) {
     }
   };
 
+  const handleDonationApproval = async (donation: any, action: 'completed' | 'failed', reviewNotes?: string) => {
+    try {
+      const response = await fetch('/api/donations?id=' + donation.id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: action,
+          reviewed_by: 'المدير',
+          review_notes: reviewNotes || (action === 'completed' ? 'تم قبول التبرع' : 'تم رفض التبرع'),
+          action: action === 'completed' ? 'approved' : 'rejected',
+        }),
+      });
+      
+      if (!response.ok) throw new Error('Failed to update donation status');
+      
+      await loadDonations();
+      toast.success(action === 'completed' ? 'تم قبول التبرع وإرسال إشعار للمتبرع' : 'تم رفض التبرع');
+    } catch (error) {
+      console.error('Error updating donation status:', error);
+      toast.error('حدث خطأ أثناء تحديث حالة التبرع');
+    }
+  };
+
   const handleRequestStatusChange = async (id: string | number, status: string) => {
     try {
       await requestsService.update(id, { status } as any);
@@ -989,6 +1013,27 @@ export function AdminDashboard({ onClose }: { onClose: () => void }) {
     { key: 'project', label: 'المشروع' },
     { key: 'status', label: 'الحالة', render: (d: any) => <StatusBadge status={d.status} /> },
     { key: 'date', label: 'التاريخ', render: (d: any) => d.date ? new Date(d.date).toLocaleDateString('ar-SA') : '—' },
+    {
+      key: 'actions',
+      label: 'إجراءات',
+      render: (d: any) => (
+        <div className="flex items-center justify-center gap-1">
+          {d.status === 'pending' && (
+            <>
+              <button onClick={() => handleDonationApproval(d, 'completed')} className="p-1.5 rounded-lg hover:bg-green-50 text-green-600 hover:text-green-700 transition-colors" title="قبول">
+                <CheckCircle className="w-4 h-4" />
+              </button>
+              <button onClick={() => handleDonationApproval(d, 'failed')} className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors" title="رفض">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </>
+          )}
+          <button onClick={() => setViewModal({ item: d, title: `تبرع من ${d.donor}` })} className="p-1.5 rounded-lg hover:bg-[var(--muted)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors" title="عرض">
+            <Eye className="w-4 h-4" />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   const requestColumns = [
@@ -1481,10 +1526,16 @@ export function AdminDashboard({ onClose }: { onClose: () => void }) {
   };
 
   // ===== واجهة المستخدم الرئيسية =====
+  const containerClass = isFullPage 
+    ? "min-h-screen bg-[var(--background)]"
+    : "fixed inset-0 z-[100] flex bg-black/50 backdrop-blur-sm";
+
   return (
-    <div className="fixed inset-0 z-[100] flex" style={{ direction: "rtl", fontFamily: "Cairo, sans-serif" }}>
-      <button type="button" aria-label="إغلاق" className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 flex w-full max-w-7xl mx-auto my-4 rounded-2xl overflow-hidden shadow-2xl bg-[var(--background)]">
+    <div className={containerClass} style={{ direction: "rtl", fontFamily: "Cairo, sans-serif" }}>
+      {!isFullPage && (
+        <button type="button" aria-label="إغلاق" className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      )}
+      <div className={`relative z-10 flex w-full ${isFullPage ? '' : 'max-w-7xl mx-auto my-4'} rounded-2xl overflow-hidden shadow-2xl bg-[var(--background)] ${isFullPage ? 'min-h-screen' : ''}`}>
         {/* Sidebar */}
         <aside className={`flex-shrink-0 transition-all duration-300 flex flex-col border-l border-[var(--border)] bg-white ${sidebarCollapsed ? "w-16" : "w-56"}`}>
           <div className="p-4 border-b border-[var(--border)] flex items-center justify-between">
@@ -1529,7 +1580,7 @@ export function AdminDashboard({ onClose }: { onClose: () => void }) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="relative p-2 rounded-lg hover:bg-[var(--muted)] transition-colors">
+              <button onClick={() => setShowNotifications(true)} className="relative p-2 rounded-lg hover:bg-[var(--muted)] transition-colors">
                 <Bell className="w-4 h-4 text-[var(--muted-foreground)]" />
                 <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500" />
               </button>
@@ -1551,6 +1602,7 @@ export function AdminDashboard({ onClose }: { onClose: () => void }) {
       </div>
       {renderViewModal()}
       {ConfirmDialog}
+      <NotificationsPanel isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
     </div>
   );
 }

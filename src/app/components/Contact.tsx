@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
 import { useState } from "react";
 
@@ -64,7 +65,13 @@ export const Contact = ({ setCurrentPage = () => {} }: ContactProps) => {
     <section className="py-20 bg-[var(--secondary)]" style={{ direction: "rtl" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center mb-14">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-14"
+        >
           <span
             className="inline-block mb-3 text-[var(--brand-green)] border border-[var(--brand-green)]/30 bg-[var(--brand-green-pale)] px-4 py-1 rounded-full"
             style={{ fontSize: "0.8rem", fontWeight: 600 }}
@@ -78,17 +85,22 @@ export const Contact = ({ setCurrentPage = () => {} }: ContactProps) => {
           <p className="text-[var(--muted-foreground)] max-w-xl mx-auto" style={{ fontSize: "0.9rem", lineHeight: "1.7" }}>
             سواء كنت مانحًا أو متطوعًا أو شريكًا أو مستفيدًا، نسعد بتواصلك معنا
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Contact Info */}
           <div className="lg:col-span-2 space-y-4">
-            {contactInfo.map((item) => {
+            {contactInfo.map((item, i) => {
               const Icon = item.icon;
               return (
-                <div
+                <motion.div
                   key={item.title}
-                  className="bg-white rounded-xl p-5 border border-[var(--border)] flex gap-4 items-start"
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white rounded-xl p-5 border border-[var(--border)] flex gap-4 items-start transition-shadow hover:shadow-md"
                 >
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -106,12 +118,18 @@ export const Contact = ({ setCurrentPage = () => {} }: ContactProps) => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
 
             {/* Social */}
-            <div className="bg-[var(--brand-green)] rounded-xl p-5 text-white">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: contactInfo.length * 0.1 }}
+              className="bg-[var(--brand-green)] rounded-xl p-5 text-white"
+            >
               <div style={{ fontWeight: 700, fontSize: "0.9rem", marginBottom: "0.75rem" }}>
                 تابعنا على منصات التواصل
               </div>
@@ -125,18 +143,24 @@ export const Contact = ({ setCurrentPage = () => {} }: ContactProps) => {
                   <a
                     key={s.label}
                     href={s.href}
-                    className="w-9 h-9 rounded-lg bg-white/20 hover:bg-white/35 flex items-center justify-center transition-colors"
+                    className="w-9 h-9 rounded-lg bg-white/20 hover:bg-white/35 hover:scale-110 flex items-center justify-center transition-all"
                     style={{ fontSize: "0.7rem", fontWeight: 700 }}
                   >
                     {s.label}
                   </a>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Form */}
-          <div className="lg:col-span-3 bg-white rounded-2xl p-7 sm:p-8 border border-[var(--border)] shadow-sm">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-3 bg-white rounded-2xl p-7 sm:p-8 border border-[var(--border)] shadow-sm"
+          >
             {submitted ? (
               <div className="flex flex-col items-center justify-center h-full text-center py-12">
                 <CheckCircle className="w-16 h-16 text-[var(--brand-green)] mb-4" />
@@ -272,7 +296,7 @@ export const Contact = ({ setCurrentPage = () => {} }: ContactProps) => {
                 </button>
               </form>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

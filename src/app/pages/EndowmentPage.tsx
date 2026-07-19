@@ -1,4 +1,18 @@
-export function EndowmentPage() {
+import { Heart, Building2 } from "lucide-react";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export default function EndowmentPage() {
+  const navigate = useNavigate();
+  
+  const handleDonateClick = () => {
+    navigate('/donate');
+  };
+  
+  const handleContactClick = () => {
+    navigate('/contact');
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-16 bg-[var(--background)]" style={{ direction: "rtl" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -14,15 +28,27 @@ export function EndowmentPage() {
         <div className="max-w-3xl mx-auto space-y-6">
           <div className="bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-green-light)] rounded-3xl p-8 sm:p-12 text-white text-center">
             <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-5">
-              <span style={{ fontSize: "2.5rem" }}>🏗️</span>
+              <Building2 className="w-10 h-10 text-white" />
             </div>
             <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "1rem" }}>الوقف الخيري</h2>
             <p style={{ fontSize: "0.95rem", lineHeight: "1.8", opacity: 0.9, maxWidth: "500px", margin: "0 auto 1.5rem" }}>
               الوقف الخيري هو مشروع استثماري مستدام يهدف إلى تأمين مصادر دخل ثابتة للمؤسسة لضمان استمرارية برامجها ومشاريعها الإنسانية.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <button className="px-8 py-3 bg-white text-[var(--brand-green)] rounded-xl hover:bg-white/90 transition-colors" style={{ fontWeight: 700 }}>ساهم في الوقف</button>
-              <button className="px-8 py-3 border-2 border-white/40 text-white rounded-xl hover:bg-white/10 transition-colors" style={{ fontWeight: 600 }}>استفسر عن الوقف</button>
+              <button 
+                onClick={handleDonateClick}
+                className="px-8 py-3 bg-white text-[var(--brand-green)] rounded-xl hover:bg-white/90 transition-colors" 
+                style={{ fontWeight: 700 }}
+              >
+                ساهم في الوقف
+              </button>
+              <button 
+                onClick={handleContactClick}
+                className="px-8 py-3 border-2 border-white/40 text-white rounded-xl hover:bg-white/10 transition-colors" 
+                style={{ fontWeight: 600 }}
+              >
+                استفسر عن الوقف
+              </button>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

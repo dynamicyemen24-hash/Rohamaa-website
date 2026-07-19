@@ -1,7 +1,9 @@
-import { defineConfig } from 'vite'
-import * as path from 'path'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from 'vite';
+import * as path from 'path';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import { VitePWA } from 'vite-plugin-pwa';
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig({
   resolve: {
@@ -9,84 +11,148 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  assetsInclude: ['**/*.svg', '**/*.csv'],
+  assetsInclude: ['**/*.svg', '**/*.csv', '**/*.mp4', '**/*.webm'],
+  plugins: [
+    tailwindcss(),
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      manifest: {
+        name: 'مؤسسة رحماء بينهم الخيرية',
+        short_name: 'رحماء بينهم',
+        description: 'منصة خيرية شاملة للتبرع والتطوع والعمل الإنساني',
+        theme_color: '#1A5C48',
+        background_color: '#FAFAF7',
+        display: 'standalone',
+        orientation: 'any',
+        start_url: '/',
+        scope: '/',
+        lang: 'ar',
+        dir: 'rtl',
+        icons: [
+          {
+            src: '/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
+          }
+        ],
+        categories: ['charity', 'donation', 'social'],
+        shortcuts: [
+          {
+            name: 'تبرع سريع',
+            url: '/donate',
+            icons: [{ src: '/icons/donate-96.png', sizes: '96x96' }]
+          },
+          {
+            name: 'آخر الأخبار',
+            url: '/news',
+            icons: [{ src: '/icons/news-96.png', sizes: '96x96' }]
+          }
+        ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
+        maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/images\.unsplash\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'image-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30
+              }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/cdn\.sanity\.io\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'sanity-cache',
+              expiration: {
+                maxEntries: 200,
+                maxAgeSeconds: 60 * 60
+              }
+            }
+          }
+        ],
+        skipWaiting: true,
+        clientsClaim: true,
+        // CRITICAL: Don't let SW intercept API calls that may fail CORS
+        navigateFallback: null,
+        navigateFallbackDenylist: [/\/api\//, /\/v\d\/data\//],
+      }
+    }),
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 1024
+    })
+  ],
+  
   build: {
     outDir: 'dist',
     sourcemap: false,
-    minify: 'esbuild',
-    target: 'es2020',
+    minify: 'terser',
+    target: 'esnext',
     rollupOptions: {
       output: {
-        manualChunks(id: string) {
-          // Core React
-          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/scheduler/')) {
-            return 'vendor-core'
-          }
-          // MUI
-          if (id.includes('node_modules/@emotion/') || id.includes('node_modules/@mui/')) {
-            return 'vendor-mui'
-          }
-          // Radix UI
-          if (id.includes('node_modules/@radix-ui/')) {
-            return 'vendor-radix'
-          }
-          // Recharts (large)
-          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-') || id.includes('node_modules/victory-')) {
-            return 'vendor-charts'
-          }
-          // Form libraries
-          if (id.includes('node_modules/react-hook-form') || id.includes('node_modules/react-dnd') || id.includes('node_modules/dnd-core')) {
-            return 'vendor-form'
-          }
-          // Lucide (large icon library)
-          if (id.includes('node_modules/lucide-react')) {
-            return 'vendor-icons'
-          }
-          // Supabase
-          if (id.includes('node_modules/@supabase/')) {
-            return 'vendor-supabase'
-          }
-          // Motion/Framer
-          if (id.includes('node_modules/motion') || id.includes('node_modules/framer-motion') || id.includes('node_modules/motion-dom') || id.includes('node_modules/motion-utils')) {
-            return 'vendor-motion'
-          }
-          // Utility libraries
-          if (id.includes('node_modules/date-fns') || id.includes('node_modules/clsx') || id.includes('node_modules/class-variance-authority') || id.includes('node_modules/tailwind-merge')) {
-            return 'vendor-utils'
-          }
-          // Lodash (large)
-          if (id.includes('node_modules/lodash')) {
-            return 'vendor-lodash'
-          }
-        },
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash][extname]',
-      },
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@emotion/react'],
+          'sanity-vendor': ['@sanity/client', '@sanity/image-url'],
+          'utils-vendor': ['date-fns', 'clsx', 'tailwind-merge'],
+        }
+      }
     },
-    reportCompressedSize: true,
     chunkSizeWarningLimit: 1000,
-    modulePreload: {
-      polyfill: true,
-    },
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096
   },
   server: {
     port: 5173,
     host: true,
-    watch: {
-      usePolling: false,
+    cors: true,
+    hmr: {
+      overlay: true
+    },
+    proxy: {
+      // ===== SANITY API PROXY - حل مشكلة CORS =====
+      '/api/sanity': {
+        target: 'https://xd0ohyiz.api.sanity.io',
+        changeOrigin: true,
+        rewrite: (pathStr) => pathStr.replace(/^\/api\/sanity/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyRes', (proxyRes) => {
+            // إضافة CORS headers للرد
+            proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+            proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+            proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+          });
+        },
+      },
+      // ===== GENERAL API PROXY =====
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        configure: (proxy) => {
+          proxy.on('proxyRes', (proxyRes) => {
+            proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+          });
+        },
+      },
     },
   },
-  plugins: [
-    tailwindcss(),
-    react(),
-  ],
-  optimizeDeps: {
-    include: [
-      'react',
-      'react-dom',
-      'lucide-react',
-      '@supabase/supabase-js',
-    ],
-  },
-})
+  preview: {
+    port: 4173,
+    host: true
+  }
+});

@@ -31,7 +31,7 @@ function VolunteerLoadingSkeleton() {
   );
 }
 
-export function VolunteerPage() {
+export default function VolunteerPage() {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);

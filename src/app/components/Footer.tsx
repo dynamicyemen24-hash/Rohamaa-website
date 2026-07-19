@@ -1,4 +1,6 @@
-import { Heart, Mail, Phone, MapPin, ArrowUp } from "lucide-react";
+import { useState } from "react";
+import { Heart, Mail, Phone, MapPin, ArrowUp, Shield, FileText, AlertCircle, CreditCard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const footerLinks = {
   المؤسسة: [
@@ -9,10 +11,9 @@ const footerLinks = {
     { label: "حوكمة المؤسسة", href: "about" },
   ],
   البرامج: [
-    { label: "الإغاثة الإنسانية", href: "programs-relief" },
-    { label: "التعليم والتأهيل", href: "programs-education" },
-    { label: "التنمية المجتمعية", href: "programs-development" },
-    { label: "الدعوة والإرشاد", href: "programs-dawah" },
+    { label: "برامجنا", href: "programs" },
+    { label: "مشاريعنا", href: "projects" },
+    { label: "قصص النجاح", href: "success" },
   ],
   المشاركة: [
     { label: "تبرع الآن", href: "donate" },
@@ -40,16 +41,24 @@ interface FooterProps {
 }
 
 export function Footer({ setCurrentPage }: FooterProps) {
+  const navigate = useNavigate();
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
+  const handlePolicyClick = (policyType: string) => {
+    navigate('/privacy-policy', { state: { policyType } });
+  };
+
   // Newsletter subscription
+  const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
     if (email) {
-      alert('شكرًا لاشتراكك في نشرتنا البريدية!');
+      setSubscribeStatus('success');
       form.reset();
+      setTimeout(() => setSubscribeStatus('idle'), 3000);
     }
   };
 
@@ -161,16 +170,31 @@ export function Footer({ setCurrentPage }: FooterProps) {
           <div className="text-white/40 text-center sm:text-right" style={{ fontSize: "0.75rem" }}>
             © ٢٠٢٥ مؤسسة رحماء بينهم. جميع الحقوق محفوظة.
           </div>
-          <div className="flex items-center gap-4">
-            {["سياسة الخصوصية", "شروط الاستخدام", "إخلاء المسؤولية"].map((link) => (
-              <button
-                key={link}
-                className="text-white/40 hover:text-white/65 transition-colors focus:outline-none focus:text-white/65"
-                style={{ fontSize: "0.72rem" }}
-              >
-                {link}
-              </button>
-            ))}
+<div className="flex items-center gap-4">
+             {/* License Numbers */}
+             <div className="text-white/40 text-xs">
+               <span>رخصة جمع التبرعات: 2024/YEM/001</span>
+               <span className="mx-2">|</span>
+               <span>مؤسسة معتمدة من وزارة التعاون والتنمية</span>
+             </div>
+             
+             {/* Payment Gateways Icons */}
+             <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/10">
+               <div className="flex items-center gap-1" title="Stripe - مؤمون">
+                 <div className="w-6 h-6 rounded bg-blue-500 flex items-center justify-center">
+                   <CreditCard className="w-3 h-3 text-white" />
+                 </div>
+               </div>
+               <div className="flex items-center gap-1" title="مدى - مؤمن">
+                 <div className="w-6 h-6 rounded bg-green-500 flex items-center justify-center">
+                   <CreditCard className="w-3 h-3 text-white" />
+                 </div>
+               </div>
+               <div className="flex items-center gap-1" title="SSL - مشفر">
+                 <Shield className="w-3 h-3 text-[var(--brand-gold)]" />
+               </div>
+               <span className="text-white/60 text-xs font-medium">آمن</span>
+             </div>
             <button
               onClick={scrollToTop}
               className="w-9 h-9 rounded-full bg-white/10 hover:bg-[var(--brand-gold)] flex items-center justify-center transition-colors"

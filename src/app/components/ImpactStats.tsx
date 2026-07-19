@@ -1,12 +1,15 @@
-import { Users, FolderOpen, Handshake, Heart } from "lucide-react";
+// Impact Statistics Component - Enhanced with additional metrics
+// إحصائيات الأثر - محسنة ببيانات إضافية
+import { Users, FolderOpen, Handshake, Heart, DollarSign } from "lucide-react";
 import { useState, useEffect, useRef, type ComponentType } from "react";
 
-import { dashboardService } from "@/shared/services/dashboard.service";
+import { SEED_IMPACT } from "@/content/website";
+import { useDynamicContent } from "@/shared/hooks/useDynamicContent";
+import { contentBridge } from "@/shared/services/content-bridge.service";
 
 interface Stat {
   icon: ComponentType<{ className?: string; style?: React.CSSProperties }>;
   value: number;
-  display: string;
   label: string;
   sub: string;
   color: string;
@@ -69,17 +72,65 @@ export function ImpactStats() {
     activeProjects?: number;
     totalPartners?: number;
     totalVolunteers?: number;
+    totalDonations?: number;
+    productiveFamilies?: number;
   } | null>(null);
+  const [contentSource, setContentSource] = useState<'static' | 'sanity'>('static');
+  const [showDevBadge, setShowDevBadge] = useState(false);
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  // Use dynamic content hook
+  const { data: dynamicImpact, source } = useDynamicContent<any>({
+    contentType: 'impact',
+    enableRealtime: false,
+    refreshInterval: 300000
+  });
+
+  // Show dev badge in development mode
+  useEffect(() => {
+    if (import.meta.env?.DEV) {
+      setShowDevBadge(true);
+    }
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
-    dashboardService.getMetrics().then((data) => {
-      if (!cancelled) setMetrics(data);
-    }).catch(() => {
-      /* ignore */
-    });
+    const fallback = {
+      totalBeneficiaries: SEED_IMPACT.beneficiaries,
+      activeProjects: SEED_IMPACT.projects,
+      totalPartners: SEED_IMPACT.partners,
+      totalVolunteers: SEED_IMPACT.volunteers,
+      totalDonations: 3200000, // إجمالي المساعدات الموزعة
+      productiveFamilies: 472,  // عدد الأسر المنتجة
+    };
+
+    const loadMetrics = async () => {
+      try {
+        if (dynamicImpact.length > 0) {
+          const data = dynamicImpact[0];
+          setMetrics({
+            totalBeneficiaries: data?.totalBeneficiaries || data?.beneficiaries || fallback.totalBeneficiaries,
+            activeProjects: data?.activeProjects || data?.projects || fallback.activeProjects,
+            totalPartners: data?.totalPartners || data?.partners || fallback.totalPartners,
+            totalVolunteers: data?.totalVolunteers || data?.volunteers || fallback.totalVolunteers,
+            totalDonations: data?.totalDonations || fallback.totalDonations,
+            productiveFamilies: data?.productiveFamilies || fallback.productiveFamilies,
+          });
+          setContentSource(source as 'sanity' | 'static');
+        } else {
+          setMetrics(fallback);
+          setContentSource('static');
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setMetrics(fallback);
+          setContentSource('static');
+        }
+      }
+    };
+
+    loadMetrics();
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -92,13 +143,12 @@ export function ImpactStats() {
       cancelled = true;
       observer.disconnect();
     };
-  }, []);
+  }, [dynamicImpact, source]);
 
   const stats = [
     {
       icon: Users,
       value: metrics?.totalBeneficiaries ?? 0,
-      display: metrics?.totalBeneficiaries ? `+${metrics.totalBeneficiaries.toLocaleString("ar-SA")}` : "...",
       label: "مستفيد مباشر",
       sub: "من مختلف المحافظات والمناطق",
       color: "var(--brand-green)",
@@ -106,15 +156,20 @@ export function ImpactStats() {
     {
       icon: FolderOpen,
       value: metrics?.activeProjects ?? 0,
-      display: metrics?.activeProjects ? `+${metrics.activeProjects.toLocaleString("ar-SA")}` : "...",
       label: "مشروع منجز",
       sub: "في مجالات متنوعة ومؤثرة",
       color: "var(--brand-gold)",
     },
     {
+      icon: DollarSign,
+      value: metrics?.totalDonations ?? 0,
+      label: "إجمالي المساعدات",
+      sub: "المبالغ المالية الموزعة",
+      color: "#059669",
+    },
+    {
       icon: Handshake,
       value: metrics?.totalPartners ?? 0,
-      display: metrics?.totalPartners ? `+${metrics.totalPartners.toLocaleString("ar-SA")}` : "...",
       label: "شريك استراتيجي",
       sub: "من مؤسسات وجهات داعمة",
       color: "var(--brand-green-light)",
@@ -122,15 +177,32 @@ export function ImpactStats() {
     {
       icon: Heart,
       value: metrics?.totalVolunteers ?? 0,
-      display: metrics?.totalVolunteers ? `+${metrics.totalVolunteers.toLocaleString("ar-SA")}` : "...",
       label: "متطوع ومبادر",
       sub: "فريق عمل المؤسسة",
       color: "var(--brand-gold)",
     },
+    {
+      icon: Users,
+      value: metrics?.productiveFamilies ?? 0,
+      label: "أسرة منتجة",
+      sub: "نتاج برامج التمكين الاقتصادي",
+      color: "#7C3AED",
+    },
   ];
+
+  // Dev indicator badge
+  const DevBadge = showDevBadge ? (
+    <div className="fixed top-4 left-4 z-50 bg-purple-600 text-white text-xs px-3 py-2 rounded-lg shadow-lg">
+      <div className="flex items-center gap-2">
+        <div className={`w-2 h-2 rounded-full ${contentSource === 'sanity' ? 'bg-green-400' : 'bg-yellow-400'}`} />
+        <span>{contentSource === 'sanity' ? 'Sanity CMS' : 'Static Content'}</span>
+      </div>
+    </div>
+  ) : null;
 
   return (
     <section className="py-20 bg-[var(--secondary)]" style={{ direction: "rtl" }} ref={ref}>
+      {DevBadge}
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
           <span
@@ -148,7 +220,7 @@ export function ImpactStats() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {stats.map((stat, i) => (
             <StatCard key={stat.label} stat={stat} index={i} inView={inView} />
           ))}

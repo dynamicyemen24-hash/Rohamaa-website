@@ -1,0 +1,115 @@
+/* Mobile Safety Styles - دعم النوتش والشريط السفلي */
+:root {
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+  --touch-target-min: 44px;
+}
+
+/* Safe Area Padding Classes */
+.safe-top {
+  padding-top: var(--safe-area-top);
+}
+
+.safe-bottom {
+  padding-bottom: var(--safe-area-bottom);
+}
+
+.safe-left {
+  padding-left: var(--safe-area-left);
+}
+
+.safe-right {
+  padding-right: var(--safe-area-right);
+}
+
+.safe-area-inset {
+  padding-top: var(--safe-area-top);
+  padding-bottom: var(--safe-area-bottom);
+  padding-left: var(--safe-area-left);
+  padding-right: var(--safe-area-right);
+}
+
+/* Touch Target Optimization */
+.touch-target {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+/* Mobile First Utilities */
+.mobile-only {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .mobile-only {
+    display: none;
+  }
+}
+
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .desktop-only {
+    display: block;
+  }
+}
+
+/* Mobile Menu Improvements */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  padding-top: calc(4rem + var(--safe-area-top));
+  transform: translateX(100%);
+  transition: transform 200ms ease-in-out;
+}
+
+.mobile-menu.open {
+  transform: translateX(0);
+}
+
+/* iOS Notch Support */
+@supports (padding: env(safe-area-inset-top)) {
+  .navbar {
+    padding-top: var(--safe-area-top);
+  }
+
+  .bottom-nav {
+    padding-bottom: var(--safe-area-bottom);
+  }
+}
+
+/* Prevent zoom on input focus (iOS) */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile Scrollbar */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--brand-green);
+    border-radius: 2px;
+  }
+}

@@ -22,7 +22,7 @@ function ReportsLoadingSkeleton() {
   );
 }
 
-export function ReportsPage() {
+export default function ReportsPage() {
   const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 

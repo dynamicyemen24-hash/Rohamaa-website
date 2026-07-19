@@ -1,20 +1,52 @@
 // Homepage - Rohamaa Campaign Home Page
 // Enhanced with high-quality visual elements, hero video, live counters, quick donation
 import { Heart, ArrowRight, Play, ChevronDown, Calculator } from 'lucide-react';
-import { ImpactStats } from '@/app/components/ImpactStats';
-import { Programs } from '@/app/components/Programs';
-import { SuccessStories } from '@/app/components/SuccessStories';
-import { Partners } from '@/app/components/Partners';
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+
 import { Contact } from '@/app/components/Contact';
-import { News } from '@/app/components/News';
-import { QuickDonation } from '@/app/components/QuickDonation';
-import { Logo } from '@/app/components/Logo';
 import { GeoScopeMap } from '@/app/components/GeoScopeMap';
+import { ImpactStats } from '@/app/components/ImpactStats';
+import { Logo } from '@/app/components/Logo';
+import { News } from '@/app/components/News';
+import { Partners } from '@/app/components/Partners';
+import { Programs } from '@/app/components/Programs';
+import { QuickDonation } from '@/app/components/QuickDonation';
+import { SuccessStories } from '@/app/components/SuccessStories';
 import { useSEO } from '@/utils/seoAdvanced';
-import { motion } from "motion/react";
+
 
 interface HomePageProps {
   setCurrentPage?: (page: string) => void;
+}
+
+function easeOutCubic(t: number) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function useCountUp(end: number, durationMs = 1400, started = false) {
+  const [value, setValue] = useState(0);
+  const startRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!started) return;
+    startRef.current = null;
+    let raf = 0;
+
+    const step = (ts: number) => {
+      if (startRef.current === null) startRef.current = ts;
+      const progress = Math.min((ts - startRef.current) / durationMs, 1);
+      setValue(Math.floor(easeOutCubic(progress) * end));
+      if (progress < 1) {
+        raf = requestAnimationFrame(step);
+      }
+    };
+
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [started, durationMs, end]);
+
+  return value;
 }
 
 export default function HomePage({ setCurrentPage = () => {} }: HomePageProps) {
@@ -23,13 +55,31 @@ export default function HomePage({ setCurrentPage = () => {} }: HomePageProps) {
     title: 'رحماء بينهم - منصة إغاثة وتنمية',
     description: 'حملة رحماء بينهم الخيرية - تضامن إنساني وتنموي متكامل',
     type: 'website',
-    url: 'https://rohamaa.org',
+    url: 'https://rbdcye.org',
   });
+
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const [heroVisible, setHeroVisible] = useState(false);
+
+  useEffect(() => {
+    const node = heroRef.current;
+    if (!node) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setHeroVisible(true); },
+      { threshold: 0.2 }
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, []);
+
+  const count1 = useCountUp(12847, 1600, heroVisible);
+  const count2 = useCountUp(24, 1200, heroVisible);
+  const count3 = useCountUp(48, 1300, heroVisible);
 
   return (
     <div className="min-h-screen" dir="rtl">
       {/* Hero Section - Enhanced with Video Support */}
-      <section className="relative h-screen min-h-[700px] overflow-hidden">
+      <section ref={heroRef} className="relative h-screen min-h-[700px] overflow-hidden">
         {/* Video Background */}
         <div className="hero-video-bg">
           <video
@@ -38,13 +88,13 @@ export default function HomePage({ setCurrentPage = () => {} }: HomePageProps) {
             loop
             playsInline
             preload="metadata"
-            poster="https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=1920&h=1080&q=80"
+            poster="https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=1920&h=1080&q=80&v=5"
             className="w-full h-full object-cover"
           >
             <source src="/videos/hero-background.mp4" type="video/mp4" />
           </video>
           <img
-            src="https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=1920&h=1080&q=80"
+            src="https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=1920&h=1080&q=80&v=5"
             alt="مؤسسة رحماء بينهم - إغاثة وتنمية"
             className="w-full h-full object-cover"
           />
@@ -128,15 +178,15 @@ export default function HomePage({ setCurrentPage = () => {} }: HomePageProps) {
               transition={{ delay: 0.6, duration: 0.6 }}
             >
               <div className="hero-stat-item">
-                <div className="hero-stat-value">+12,847</div>
+                <div className="hero-stat-value">+{count1.toLocaleString('ar-YE')}</div>
                 <div className="hero-stat-label">مستفيد مباشر</div>
               </div>
               <div className="hero-stat-item">
-                <div className="hero-stat-value">+24</div>
+                <div className="hero-stat-value">+{count2.toLocaleString('ar-YE')}</div>
                 <div className="hero-stat-label">مشروع منجز</div>
               </div>
               <div className="hero-stat-item">
-                <div className="hero-stat-value">+48</div>
+                <div className="hero-stat-value">+{count3.toLocaleString('ar-YE')}</div>
                 <div className="hero-stat-label">شريك استراتيجي</div>
               </div>
             </motion.div>
@@ -174,7 +224,7 @@ export default function HomePage({ setCurrentPage = () => {} }: HomePageProps) {
         </div>
       </section>
 
-{/* GeoScope Map */}
+      {/* GeoScope Map */}
       <GeoScopeMap setCurrentPage={setCurrentPage} />
 
       {/* Programs Section */}
@@ -201,7 +251,7 @@ export default function HomePage({ setCurrentPage = () => {} }: HomePageProps) {
         </div>
       </section>
 
-{/* Contact Section */}
+      {/* Contact Section */}
       <Contact setCurrentPage={setCurrentPage} />
     </div>
   );

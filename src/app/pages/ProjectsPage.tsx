@@ -2,7 +2,8 @@ import { FolderOpen, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { Skeleton, CardSkeleton } from "@/app/components/Skeleton";
-import { projectsDashboardService } from "@/shared/services/dashboard.service";
+import { SEED_PROJECTS } from "@/content/website";
+import { sanityService } from "@/shared/services/sanity.service";
 
 function ProjectsLoadingSkeleton() {
   return (
@@ -25,14 +26,40 @@ function ProjectsLoadingSkeleton() {
 
 const LoadingSkeleton = ProjectsLoadingSkeleton;
 
-export function ProjectsPage() {
+export default function ProjectsPage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
-    projectsDashboardService.getAll().then((items) => {
-      if (!cancelled) setProjects(items);
+    const fallback = SEED_PROJECTS.map((p: any) => ({
+      id: p.id,
+      title: p.title,
+      description: p.description,
+      status: p.status,
+      beneficiaries: p.beneficiaries,
+      location: p.location,
+      progress: p.progress,
+      image: p.image,
+    }));
+    sanityService.getProjects().then((items) => {
+      if (!cancelled) {
+        const normalized = items.length > 0
+          ? items.map((p: any) => ({
+              id: p._id,
+              title: p.title,
+              description: p.description,
+              status: p.status,
+              beneficiaries: p.beneficiaries,
+              location: p.location,
+              progress: p.progress,
+              image: p.mainImage ? sanityService.getImageUrl(p.mainImage) : undefined,
+            }))
+          : fallback;
+        setProjects(normalized);
+      }
+    }).catch(() => {
+      if (!cancelled) setProjects(fallback);
     }).finally(() => {
       if (!cancelled) setLoading(false);
     });

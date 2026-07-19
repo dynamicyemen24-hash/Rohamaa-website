@@ -1,4 +1,4 @@
-import { Target, Eye, Heart, Award, Users, Calendar, MapPin, ChevronLeft } from "lucide-react";
+import { Target, Eye, Heart, Award, Users } from "lucide-react";
 
 const values = [
   { icon: Heart, title: "الرحمة والإنسانية", desc: "نضع الإنسان في قلب كل ما نفعل، ونتعامل مع كل حالة بقدر وافر من الرحمة والتقدير." },

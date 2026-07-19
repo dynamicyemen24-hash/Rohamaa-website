@@ -1,100 +1,166 @@
-import { useEffect } from 'react';
+import React from "react";
 
-interface SEOProps {
-  title: string;
-  description: string;
-  keywords?: string;
-  image?: string;
-  url?: string;
-  type?: 'website' | 'article' | 'organization';
+/**
+ * Generate SEO-related meta tags and structured data
+ */
+
+interface SeoProps {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  twitterCard?: "summary" | "summary_large_image" | "app" | "player";
+  canonicalUrl?: string;
+  noIndex?: boolean;
+  locale?: string;
+  type?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  siteName?: string;
 }
 
-export function useSEO({
-  title,
-  description,
-  keywords,
-  image = '/favicon.svg',
-  url = 'https://rohamaa.org',
-  type = 'website',
-}: SEOProps) {
-  useEffect(() => {
-    // Update document title
-    document.title = `${title} | مؤسسة رحماء بينهم`;
+/**
+ * Generate JSON-LD structured data for Organization
+ */
+export function getOrganizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "مؤسسة رحماء بينهم الخيرية",
+    alternateName: "Rohamaa Foundation",
+    url: "https://rbdcye.org",
+    logo: "https://rbdcye.org/logo.png",
+    description:
+      "منظمة إنسانية تنموية رائدة في اليمن، تعمل على تخفيف معاناة الأسرة اليمنية وتحقيق التنمية المستدامة",
+    foundingDate: "2009",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "YE",
+    },
+    sameAs: [
+      "https://facebook.com/rohamaa",
+      "https://twitter.com/rohamaa",
+      "https://youtube.com/@rohamaa",
+    ],
+  };
+}
 
-    // Update or create meta tags
-    const updateMetaTag = (property: string, content: string, isProperty = false) => {
-      const attribute = isProperty ? 'property' : 'name';
-      let element = document.querySelector(`meta[${attribute}="${property}"]`);
-      
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute(attribute, property);
-        document.head.appendChild(element);
-      }
-      
-      element.setAttribute('content', content);
-    };
+/**
+ * Generate JSON-LD breadcrumbs
+ */
+export function getBreadcrumbSchema(items: { label: string; href?: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      ...(item.href ? { item: `https://rbdcye.org${item.href}` } : {}),
+    })),
+  };
+}
 
-    // Basic meta tags
-    updateMetaTag('description', description);
-    if (keywords) updateMetaTag('keywords', keywords);
-    updateMetaTag('author', 'مؤسسة رحماء بينهم');
-    updateMetaTag('robots', 'index, follow');
-    updateMetaTag('viewport', 'width=device-width, initial-scale=1.0');
+/**
+ * Generate comprehensive SEO head tags
+ */
+export function generateSeoMeta({
+  title = "مؤسسة رحماء بينهم الخيرية | Rohamaa Foundation",
+  description = "منظمة إنسانية تنموية رائدة في اليمن، تعمل على تخفيف معاناة الأسرة اليمنية وتحقيق التنمية المستدامة عبر برامج متكاملة في الإغاثة والتعليم والتنمية المجتمعية.",
+  ogImage = "https://rbdcye.org/og-default.jpg",
+  ogTitle,
+  ogDescription,
+  twitterCard = "summary_large_image",
+  canonicalUrl,
+  noIndex = false,
+  locale = "ar_YE",
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  author,
+  siteName = "رحماء بينهم",
+}: SeoProps): React.ReactNode[] {
+  const meta: React.ReactNode[] = [];
 
-    // Open Graph / Facebook
-    updateMetaTag('og:title', title, true);
-    updateMetaTag('og:description', description, true);
-    updateMetaTag('og:image', image, true);
-    updateMetaTag('og:url', url, true);
-    updateMetaTag('og:type', type, true);
-    updateMetaTag('og:locale', 'ar_YE', true);
-    updateMetaTag('og:site_name', 'مؤسسة رحماء بينهم', true);
+  // Charset and viewport
+  meta.push(<meta charSet="utf-8" key="charset" />);
+  meta.push(
+    <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport" />
+  );
 
-    // Twitter
-    updateMetaTag('twitter:card', 'summary_large_image');
-    updateMetaTag('twitter:title', title);
-    updateMetaTag('twitter:description', description);
-    updateMetaTag('twitter:image', image);
+  // Title and description
+  meta.push(<title key="title">{title}</title>);
+  meta.push(<meta name="description" content={description} key="desc" />);
 
-    // Canonical URL
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', url);
+  // Canonical URL
+  if (canonicalUrl) {
+    meta.push(<link rel="canonical" href={canonicalUrl} key="canonical" />);
+  }
 
-    // JSON-LD Structured Data
-    const jsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'مؤسسة رحماء بينهم',
-      description,
-      url: 'https://rohamaa.org',
-      logo: '/favicon.svg',
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'صنعاء',
-        addressCountry: 'YE',
-      },
-      contactPoint: {
-        '@type': 'ContactPoint',
-        email: 'info@rohamaa.org',
-        telephone: '+96712345678',
-        contactType: 'customer service',
-      },
-      sameAs: [],
-    };
+  // Robots
+  meta.push(
+    <meta
+      name="robots"
+      content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large"}
+      key="robots"
+    />
+  );
 
-    let scriptTag = document.querySelector('script[type="application/ld+json"]');
-    if (!scriptTag) {
-      scriptTag = document.createElement('script');
-      scriptTag.setAttribute('type', 'application/ld+json');
-      document.head.appendChild(scriptTag);
-    }
-    scriptTag.textContent = JSON.stringify(jsonLd);
+  // Open Graph
+  meta.push(<meta property="og:locale" content={locale} key="oglocale" />);
+  meta.push(<meta property="og:type" content={type} key="ogtype" />);
+  meta.push(<meta property="og:site_name" content={siteName} key="ogsite" />);
+  meta.push(<meta property="og:title" content={ogTitle || title} key="ogtitle" />);
+  meta.push(
+    <meta property="og:description" content={ogDescription || description} key="ogdesc" />
+  );
+  meta.push(<meta property="og:image" content={ogImage} key="ogimage" />);
+  meta.push(
+    <meta property="og:image:width" content="1200" key="ogiw" />
+  );
+  meta.push(
+    <meta property="og:image:height" content="630" key="ogih" />
+  );
 
-  }, [title, description, keywords, image, url, type]);
+  // Article-specific OG tags
+  if (type === "article" && publishedTime) {
+    meta.push(
+      <meta property="article:published_time" content={publishedTime} key="articlept" />
+    );
+  }
+  if (type === "article" && modifiedTime) {
+    meta.push(
+      <meta property="article:modified_time" content={modifiedTime} key="articlemt" />
+    );
+  }
+  if (type === "article" && author) {
+    meta.push(
+      <meta property="article:author" content={author} key="articleauthor" />
+    );
+  }
+
+  // Twitter Card
+  meta.push(<meta name="twitter:card" content={twitterCard} key="twcard" />);
+  meta.push(<meta name="twitter:title" content={ogTitle || title} key="twtitle" />);
+  meta.push(
+    <meta name="twitter:description" content={ogDescription || description} key="twdesc" />
+  );
+  meta.push(<meta name="twitter:image" content={ogImage} key="twimage" />);
+
+  return meta;
+}
+
+/**
+ * Generate Google Analytics / analytics script (placeholder)
+ */
+export function getAnalyticsScript(): React.ReactNode {
+  return (
+    <script
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GA_ID || "G-XXXXXXXXXX"}`}
+      key="ga"
+    />
+  );
 }

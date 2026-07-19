@@ -1,4 +1,14 @@
-// services/news.service.ts
+// Main services index file
+export { dataService } from './data.service';
+export { postgresService } from './postgres.service';
+export { sanityService } from './sanity.service';
+export { notificationService } from './notification.service';
+export { authEnhanced } from './auth-enhanced.service';
+
+// Re-export supabase client
+export { supabase, hasSupabaseConfig, DB_SCHEMA } from './supabase.client';
+
+// News service
 import { DB_SCHEMA, supabase } from './supabase.client';
 
 export const newsService = {
@@ -42,3 +52,6 @@ export const newsService = {
     return true;
   }
 };
+
+// Payment service
+export { processDonation, openPaymentModal, createCheckoutSession, usePayment } from './payment.service';

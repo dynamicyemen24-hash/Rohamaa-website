@@ -1,0 +1,30 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"chat.tools.terminal.autoApprove": {
+			"/^pnpm install$/": {
+				"approve": true,
+				"matchCommandLine": true
+			},
+			"/^mkdir \"G:\\\\App25\\\\Rohamaa_website\\\\.worktrees\\\\copilot-worktree-2026-06-23T22-26-06\\\\src\\\\app\\\\components\\\\AdminDashboard\" -Force$/": {
+				"approve": true,
+				"matchCommandLine": true
+			},
+			"/^npm install$/": true,
+			"/^node -e \"const fs=require\\('fs'\\); const p='node_modules/\\.pnpm/@tailwindcss\\+oxide@4\\.1\\.12/node_modules/@tailwindcss/oxide'; console\\.log\\('exists', fs\\.existsSync\\(p\\)\\); if \\(fs\\.existsSync\\(p\\)\\) console\\.log\\(fs\\.readdirSync\\(p\\)\\);\"$/": {
+				"approve": true,
+				"matchCommandLine": true
+			},
+			"/^node -e \"console\\.log\\(process\\.platform, process\\.arch, process\\.versions\\.node\\)\"$/": {
+				"approve": true,
+				"matchCommandLine": true
+			},
+			"ForEach-Object": true,
+			"Test-Path": true
+		}
+	}
+}

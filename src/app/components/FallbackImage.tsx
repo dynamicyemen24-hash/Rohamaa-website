@@ -1,0 +1,57 @@
+import { useState } from 'react';
+
+import { cn } from './ui/utils';
+
+interface FallbackImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  src: string;
+  alt: string;
+  fallbackSrc?: string;
+  className?: string;
+}
+
+/**
+ * مكون صورة يدعم Fallback عند حدوث خطأ في التحميل
+ */
+export function FallbackImage({ 
+  src, 
+  alt, 
+  fallbackSrc = '/images/fallback.jpg',
+  className,
+  ...props 
+}: FallbackImageProps) {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleError = () => {
+    if (!hasError) {
+      setHasError(true);
+      setImgSrc(fallbackSrc);
+    }
+  };
+
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+
+  return (
+    <>
+      {isLoading && (
+        <div className={cn("animate-pulse bg-gray-200 rounded", className)} />
+      )}
+      <img
+        {...props}
+        src={imgSrc}
+        alt={alt}
+        loading="lazy"
+        onLoad={handleLoad}
+        onError={handleError}
+        className={cn(
+          isLoading ? "opacity-0" : "opacity-100",
+          "transition-opacity duration-300",
+          className
+        )}
+      />
+    </>
+  );
+}

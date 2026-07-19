@@ -4,6 +4,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"],
     "module": "ESNext",
     "moduleDetection": "force",
     "moduleResolution": "bundler",
@@ -27,5 +28,5 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }

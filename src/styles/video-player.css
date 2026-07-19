@@ -1,0 +1,144 @@
+/* Video Player Styles - مشغل الفيديو الاحترافي */
+
+.video-player-container {
+  background: linear-gradient(135deg, #0a1a0f 0%, #0f2a1a 100%);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.video-progress-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.video-progress-bar:hover {
+  height: 10px;
+}
+
+.video-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  transition: width 0.1s linear;
+}
+
+.video-control-button {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.video-control-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.video-control-button.active {
+  background: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+/* أزرار التحكم في المشغل */
+.video-player-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.video-player-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* زر توسيع المشغل */
+.video-expand-btn {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.video-expand-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1) rotate(90deg);
+}
+
+/* مشغل الفيديو بخطوط كاملة */
+.video-fullscreen .video-player-container {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  border-radius: 0;
+}
+
+/* تأثيرات الحركة */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.video-loading {
+  animation: pulse 2s infinite;
+}
+
+/* تخصيص شريط التقدم للفصول */
+.video-chapter-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.video-chapter-marker:hover {
+  transform: translate(-50%, -50%) scale(1.5);
+  z-index: 10;
+}
+
+/* الوضع المتوسط (large) */
+.video-player-large {
+  transform: scale(1.05);
+  max-width: 72rem;
+  z-index: 50;
+}
+
+/* أزرار التنقل بين الفيديوهات */
+.video-nav-btn {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+.video-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.video-nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
