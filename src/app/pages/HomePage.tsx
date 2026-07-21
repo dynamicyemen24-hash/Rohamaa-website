@@ -1,7 +1,7 @@
 // Homepage - Rohamaa Campaign Home Page
 // Enhanced with high-quality visual elements, hero video, live counters, quick donation
-import { Heart, ArrowRight, Play, ChevronDown, Calculator } from 'lucide-react';
 import { motion } from "framer-motion";
+import { Heart, ArrowRight, Play, ChevronDown, Calculator } from 'lucide-react';
 import { useEffect, useRef, useState } from "react";
 
 import { Contact } from '@/app/components/Contact';
@@ -14,7 +14,6 @@ import { Programs } from '@/app/components/Programs';
 import { QuickDonation } from '@/app/components/QuickDonation';
 import { SuccessStories } from '@/app/components/SuccessStories';
 import { useSEO } from '@/utils/seoAdvanced';
-
 
 interface HomePageProps {
   setCurrentPage?: (page: string) => void;
@@ -83,18 +82,17 @@ export default function HomePage({ setCurrentPage = () => {} }: HomePageProps) {
         {/* Video Background */}
         <div className="hero-video-bg">
           <video
-            autoPlay
             muted
             loop
             playsInline
             preload="metadata"
-            poster="https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=1920&h=1080&q=80&v=5"
+            poster="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1920&h=1080&q=80"
             className="w-full h-full object-cover"
           >
             <source src="/videos/hero-background.mp4" type="video/mp4" />
           </video>
           <img
-            src="https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=1920&h=1080&q=80&v=5"
+            src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1920&h=1080&q=80"
             alt="مؤسسة رحماء بينهم - إغاثة وتنمية"
             className="w-full h-full object-cover"
           />
@@ -137,7 +135,7 @@ export default function HomePage({ setCurrentPage = () => {} }: HomePageProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              مؤسسة رحماء بينهم منظمة إنسانية تنموية رائدة في اليمن، تعمل على تخفيف معاناة الأسرة اليمنية وتحقيق التنمية المستدامة عبر برامج متكاملة.
+              مؤسسة رحماء بينهم منظمة إنسانية تنموية رائدة في اليمن، تعمل على تخفيف معاناط الأسرة اليمنية وتحقيق التنمية المستدامة عبر برامج متكاملة.
             </motion.p>
 
             {/* CTAs */}

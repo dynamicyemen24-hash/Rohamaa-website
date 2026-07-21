@@ -1,4 +1,5 @@
 // Advanced SEO System - JSON-LD, Open Graph, Twitter Cards, Sitemap
+import { useEffect } from "react";
 
 interface SEOData {
   title: string;
@@ -155,7 +156,8 @@ class SEOManager {
   }
 
   private setMeta(name: string, content: string) {
-    let element = document.querySelector(`meta[property="${name}"], meta[name="${name}"]`);
+    const selector = `meta[property="${name}"], meta[name="${name}"]`
+    let element = document.querySelector(selector);
     if (!element) {
       element = document.createElement('meta');
       if (name.startsWith('og:') || name.startsWith('twitter:')) {
@@ -275,11 +277,11 @@ class SEOManager {
 
 export const seoManager = SEOManager.getInstance();
 
-// Hook for SEO
+// Hook for SEO - Must be called inside React component
 export function useSEO(data: SEOData) {
-  if (typeof window !== 'undefined') {
+  useEffect(() => {
     seoManager.update(data);
-  }
+  }, [data.title, data.description]);
 }
 
 // Constants

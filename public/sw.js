@@ -417,16 +417,12 @@ globalThis.addEventListener('fetch', (event) => {
     url.pathname.startsWith('/auth/')
   ) {
     // Network only - no cache interference with API
-    event.respondWith(
-      safeFetch(request).then(response => {
-        if (response) return response;
-        // If API fails, return a meaningful error
-        return new Response(
-          JSON.stringify({ error: 'Network request failed', status: 'offline' }),
-          { status: 503, headers: { 'Content-Type': 'application/json' } }
-        );
-      })
-    );
+      event.respondWith(
+        safeFetch(request).then(response => {
+          if (response) return response;
+          return new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+        })
+      );
     return;
   }
   

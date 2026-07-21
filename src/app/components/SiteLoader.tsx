@@ -1,11 +1,11 @@
 // Site Loader - موجه الموقع الاحترافي مع الرسائل الترحيبية ومؤشر التقدم الذكي
 // Professional Site Loader with Welcome Messages and Smart Progress
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Sparkles, Shield, CheckCircle2, Zap, Video } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Heart, Sparkles, Shield, Zap, SkipForward } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface SiteLoaderProps {
-  onComplete: () => void;
+  readonly onComplete: () => void;
 }
 
 // رسائل الترحيب المتقدمة
@@ -13,47 +13,71 @@ const WELCOME_MESSAGES = [
   { text: 'مرحباً بك في مؤسسة رحماء بينهم الخيرية', icon: Heart, color: '#10B981' },
   { text: 'نحملك رحابة الخير والعطاء', icon: Sparkles, color: '#F59E0B' },
   { text: 'حملة دعوية إنسانية تنموية منذ 2014', icon: Shield, color: '#3B82F6' },
-  { text: 'فيديو تعريفي يروي قصة أثرنا', icon: Video, color: '#10B981' },
   { text: 'جاري التحضير لتجربة مميزة...', icon: Zap, color: '#8B5CF6' },
 ];
+
+// Skip button component
+const SkipButton = ({ onClick }: { onClick: () => void }) => (
+  <button
+    onClick={onClick}
+    className="absolute top-6 left-6 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/80 hover:text-white hover:bg-white/20 transition-all text-sm font-medium"
+    aria-label="تخطي شاشة التحميل"
+  >
+    <SkipForward className="w-4 h-4" />
+    تخطي
+  </button>
+);
 
 export function SiteLoader({ onComplete }: SiteLoaderProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-  const [showLogoVideo, setShowLogoVideo] = useState(true);
 
-  useEffect(() => {
+useEffect(() => {
     const timer = setInterval(() => {
-      setProgress(prev => {
-        const newProgress = prev + Math.random() * 18;
-        
-        // تغيير الرسالة كل 20%
-        if (newProgress >= (currentStep + 1) * 20 && currentStep < WELCOME_MESSAGES.length - 1) {
-          setCurrentStep(step => Math.min(step + 1, WELCOME_MESSAGES.length - 1));
-        }
-        
-        // إظهار فيديو الشعار عند الخطوة الرابعة
-        if (newProgress >= 80) {
-          setShowLogoVideo(true);
-        }
-        
-        // إكمال التحميل
-        if (newProgress >= 100) {
-          clearInterval(timer);
-          setIsComplete(true);
-          setTimeout(onComplete, 600);
-        }
-        
-        return Math.min(newProgress, 100);
-      });
+      // Calculate deterministic progress increment based on remaining time to reach 100%
+      // This avoids using Math.random() which SonarQube flags as potentially unsafe
+      const remainingProgress = 100 - progress;
+      const increment = Math.min(remainingProgress * 0.2 + 2, 18); // Dynamic increment (2-18%)
+      const newProgress = Math.min(progress + increment, 100);
+      setProgress(newProgress);
+
+      // تغيير الرسالة كل 20%
+      const nextStepThreshold = (currentStep + 1) * 20;
+      if (newProgress >= nextStepThreshold && currentStep < WELCOME_MESSAGES.length - 1) {
+        setCurrentStep(Math.min(currentStep + 1, WELCOME_MESSAGES.length - 1));
+      }
+
+      // إكمال التحميل
+      if (newProgress >= 100) {
+        clearInterval(timer);
+        setIsComplete(true);
+        setTimeout(onComplete, 600);
+      }
     }, 250);
 
     return () => clearInterval(timer);
-  }, [currentStep, onComplete]);
+  }, [progress, currentStep, onComplete]);
 
   const currentMessage = WELCOME_MESSAGES[currentStep];
   const Icon = currentMessage.icon;
+
+  // دالة تحديد فئة النقطة بناءً على الحالة
+  const getDotClassName = (index: number): string => {
+    if (index === currentStep) {
+      return 'bg-[var(--brand-gold)] w-12 scale-125';
+    }
+    if (index < currentStep) {
+      return 'bg-emerald-400';
+    }
+    return 'bg-white/20';
+  };
+
+  // دالة التخطي السريع
+  const handleSkip = useCallback(() => {
+    setIsComplete(true);
+    setTimeout(onComplete, 300);
+  }, [onComplete]);
 
   return (
     <AnimatePresence>
@@ -77,6 +101,9 @@ export function SiteLoader({ onComplete }: SiteLoaderProps) {
               `,
             }}
           />
+          
+          {/* زر التخطي */}
+          <SkipButton onClick={handleSkip} />
           
           <div className="text-center max-w-lg mx-auto px-6 z-10" dir="rtl">
             {/* شعار المؤسسة مع فيديو تحفيزي */}
@@ -153,25 +180,22 @@ export function SiteLoader({ onComplete }: SiteLoaderProps) {
             </div>
 
             {/* نقاط التحميل المحسنة */}
-            <div className="flex justify-center gap-3 mb-8">
-              {WELCOME_MESSAGES.map((_, index) => (
-                <motion.div
-                  key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentStep 
-                      ? 'bg-[var(--brand-gold)] w-12 scale-125' 
-                      : index < currentStep 
-                        ? 'bg-emerald-400' 
-                        : 'bg-white/20'
-                  }`}
-                  animate={index === currentStep ? { scale: [1, 1.3, 1] } : {}}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
-              ))}
+            <div className="flex justify-center gap-2 mb-8">
+              {WELCOME_MESSAGES.map((message, index) => {
+                const isActive = index === currentStep;
+                return (
+                  <motion.div
+                    key={message.text}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${getDotClassName(index)}`}
+                    animate={isActive ? { scale: [1, 1.3, 1] } : {}}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
+                );
+              })}
             </div>
 
             {/* رسالة ترحيبية إضافية */}
-<motion.p
+            <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}

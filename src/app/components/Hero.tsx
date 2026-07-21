@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect, useRef, useCallback } from "react";
 
 import { SEED_IMPACT } from "@/content/website";
-import { useDynamicContent } from "@/shared/hooks/useDynamicContent";
 import { contentBridge } from "@/shared/services/content-bridge.service";
 
 interface HeroProps {
@@ -30,28 +29,10 @@ const QURAN_VERSES = [
     theme: "التصدق",
   },
   {
-    arabic: "لَن تَنَالُوا الْبِرَّ حَتَّىٰ تُنفِقُوا مِمَّا تُحِبُّونَ ۚ وَمَا تُنفِقُوا مِن شَيْءٍ فَإِنَّ اللَّهَ بِهِ عَلِيمٌ",
-    surah: "آل عمران: ٩٢",
-    translation: "لن تنالوا البر حتى تنفقوا مما تحبون",
-    theme: "الإيثار",
-  },
-  {
     arabic: "وَمَنْ أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا",
     surah: "المائدة: ٣٢",
     translation: "ومن أحياها فكأنما أحيا الناس جميعا",
     theme: "الإحياء",
-  },
-  {
-    arabic: "وَمَا أَنفَقْتُم مِّن شَيْءٍ فَهُوَ يُخْلِفُهُ ۖ وَهُوَ خَيْرُ الرَّازِقِينَ",
-    surah: "سبأ: ٣٩",
-    translation: "وما أنفقتم من شيء فهو يخلفه وهو خير الرازقين",
-    theme: "الخلف",
-  },
-  {
-    arabic: "يَا أَيُّهَا الَّذِينَ آمَنُوا أَنفِقُوا مِمَّا رَزَقْنَاكُم مِّن قَبْلِ أَن يَأْتِيَ يَوْمٌ لَّا بَيْعٌ فِيهِ وَلَا خُلَّةٌ وَلَا شَفَاعَةٌ",
-    surah: "البقرة: ٢٥٤",
-    translation: "يا أيها الذين آمنوا أنفقوا مما رزقناكم من قبل أن يأتي يوم",
-    theme: "المسارعة",
   },
 ];
 
@@ -62,24 +43,9 @@ const PROPHETIC_HADITHS = [
     theme: "التنفيس",
   },
   {
-    arabic: "مَثَلُ الْمُؤْمِنِينَ فِي تَوَادِّهِمْ وَتَرَاحُمِهِمْ وَتَعَاطُفِهِمْ مَثَلُ الْجَسَدِ الْوَاحِدِ",
-    narrator: "البخاري ومسلم",
-    theme: "التراحم",
-  },
-  {
     arabic: "الصَّدَقَةُ تُطْفِئُ الْخَطِيئَةَ كَمَا يُطْفِئُ الْمَاءُ النَّارَ",
     narrator: "الترمذي",
     theme: "الصدقة",
-  },
-  {
-    arabic: "خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ",
-    narrator: "الطبراني",
-    theme: "النفع",
-  },
-  {
-    arabic: "اتَّقُوا النَّارَ وَلَوْ بِشِقِّ تَمْرَةٍ",
-    narrator: "البخاري ومسلم",
-    theme: "التقوى",
   },
 ];
 
@@ -88,40 +54,6 @@ const ISLAMIC_TEXTS = [
   ...QURAN_VERSES.map(v => ({ type: 'ayah' as const, ...v })),
   ...PROPHETIC_HADITHS.map(h => ({ type: 'hadith' as const, ...h })),
 ];
-
-// Personalized content for different visitor types
-const PERSONALIZED_CONTENT = {
-  donor: {
-    headline: "ساهمتك تغيّر حياة",
-    subheadline: "تبرعك ليس مجرد عطاء، بل هو أنطلاقة لمستقبل أفضل. انضم إلى آلاف المحسنين الذين يصنعون الفارق كل يوم.",
-    primaryCTA: { label: "تأثير تبرعاتك", page: "donor-portal", icon: Award },
-    secondaryCTA: { label: "تبرع جديد", page: "donate", icon: Heart },
-    statsFocus: ['totalDonated', 'beneficiaries', 'projectsCompleted'],
-  },
-  partner: {
-    headline: "شراكتنا لبرامج مستدامة",
-    subheadline: "نحن نؤمن بقوة التعاون. شاركنا رسالتك وشاركنا في بناء مستقبل أفضل للمجتمع.",
-    primaryCTA: { label: "استراتيجيتنا", page: "about", icon: Target },
-    secondaryCTA: { label: "طلب شراكة", page: "partners", icon: Sparkles },
-    statsFocus: ['projectsCompleted', 'partners', 'volunteers'],
-  },
-  beneficiary: {
-    headline: "نحن هنا من أجلك",
-    subheadline: "تابع مشاريعنا وانضم إلى برامجنا التي تأتي بعون الله وعونك. نحن فخورون بشركتك معنا.",
-    primaryCTA: { label: "برامجنا", page: "programs", icon: Gift },
-    secondaryCTA: { label: "تقديم طلب", page: "contact", icon: Heart },
-    statsFocus: ['beneficiaries', 'projects', 'volunteers'],
-  },
-  general: {
-    headline: "رحماء بينهم... أثرٌ يدوم",
-    subheadline: "مؤسسة رحماء بينهم منظمة إنسانية تنموية رائدة، تعمل على تخفيف معاناة الإنسان وتحقيق التنمية المستدامة عبر برامج متكاملة.",
-    primaryCTA: { label: "تبرع الآن", page: "donate", icon: Heart },
-    secondaryCTA: { label: "تعرف على برامجنا", page: "programs", icon: ChevronLeft },
-    statsFocus: ['beneficiaries', 'projects', 'partners'],
-  },
-} as const;
-
-type PersonalContentType = typeof PERSONALIZED_CONTENT;
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -258,7 +190,9 @@ function VideoBackground() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoError, setVideoError] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
 
+  // Video controls
   const toggleMute = useCallback(() => {
     if (videoRef.current) {
       videoRef.current.muted = !videoRef.current.muted;
@@ -266,21 +200,24 @@ function VideoBackground() {
     }
   }, [isMuted]);
 
-  // Fallback video sources (multiple format support)
-  const videoSources = [
-    // Primary - MP4 from public/videos
-    '/videos/hero-bg.mp4',
-    // Fallback - external MP4
-    'https://cdn.sanity.io/files/xd0ohyiz/production/hero-background.mp4',
-  ];
-
   const handleVideoError = () => {
     setVideoError(true);
   };
 
+  const togglePlay = useCallback(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play().catch(() => {});
+      }
+      setIsPlaying(!isPlaying);
+    }
+  }, [isPlaying]);
+
   if (videoError) {
     return (
-      // Animated gradient fallback
+      // Animated gradient fallback - elegant without video
       <div className="absolute inset-0">
         <div
           className="w-full h-full"
@@ -291,36 +228,53 @@ function VideoBackground() {
           }}
         />
         {/* Islamic pattern overlay */}
-        <div className="absolute inset-0 opacity-20"
+        <div className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: `
-              repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,215,0,0.03) 40px, rgba(255,215,0,0.03) 41px),
-              repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,215,0,0.03) 40px, rgba(255,215,0,0.03) 41px)
-            `,
+            backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(255,215,0,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255,215,0,0.05) 0%, transparent 50%)',
           }}
         />
       </div>
     );
   }
 
+  // Video control buttons
+  const PlayButton = (
+    <button
+      onClick={togglePlay}
+      className="absolute bottom-4 right-4 z-20 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all text-white/70 hover:text-white"
+      title={isPlaying ? 'إيقاف الفيديو' : 'تشغيل الفيديو'}
+      aria-label={isPlaying ? 'إيقاف الفيديو' : 'تشغيل الفيديو'}
+    >
+      {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+    </button>
+  );
+
+  const MuteButton = (
+    <button 
+      onClick={toggleMute} 
+      className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all text-white/70 hover:text-white" 
+      title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
+      aria-label={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}
+    >
+      {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+    </button>
+  );
+
   return (
     <div className="absolute inset-0">
       {/* Video element */}
       <video
         ref={videoRef}
-        autoPlay
         loop
         muted={isMuted}
         playsInline
-        preload="auto"
-        poster="https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=1600&h=900&auto=format&fit=crop&q=80"
+        preload="metadata"
+        poster="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1600&h=900&q=80"
         className="w-full h-full object-cover"
         onError={handleVideoError}
         aria-label="فيديو خلفية تعريفي لمؤسسة رحماء بينهم"
       >
-        {videoSources.map((src, i) => (
-          <source key={i} src={src} type="video/mp4" />
-        ))}
+        <source src="/videos/hero-bg.mp4" type="video/mp4" />
         <track kind="captions" src="" label="Arabic" srcLang="ar" />
       </video>
 
@@ -328,28 +282,13 @@ function VideoBackground() {
       <div className="absolute inset-0 bg-gradient-to-l from-[var(--brand-green)]/92 via-[var(--brand-green)]/75 to-[var(--brand-ink)]/60" />
       <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black/40 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
-      <div className="absolute inset-0 pattern-bg opacity-20" />
 
-      {/* Animated light particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-20 w-40 h-40 rounded-full" style={{
-          background: 'radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%)',
-          animation: 'float 8s ease-in-out infinite',
-        }} />
-        <div className="absolute bottom-1/3 -right-20 w-60 h-60 rounded-full" style={{
-          background: 'radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)',
-          animation: 'float 12s ease-in-out infinite reverse',
-        }} />
-      </div>
-
-      {/* Sound toggle button */}
-      <button onClick={toggleMute} className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all text-white/70 hover:text-white" title={isMuted ? 'تشغيل الصوت' : 'كتم الصوت'}>
-        {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-      </button>
+      {/* Video controls */}
+      {PlayButton}
+      {MuteButton}
 
       <style>{`
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-30px) scale(1.1); } }
       `}</style>
     </div>
   );
@@ -363,7 +302,6 @@ export function Hero({ setCurrentPage }: HeroProps) {
     totalBeneficiaries?: number;
     activeProjects?: number;
     totalPartners?: number;
-    totalVolunteers?: number;
   } | null>(null);
   const [contentSource, setContentSource] = useState<'sanity' | 'static'>('static');
   const [showDevBadge, setShowDevBadge] = useState(false);
@@ -381,28 +319,29 @@ export function Hero({ setCurrentPage }: HeroProps) {
       totalBeneficiaries: SEED_IMPACT.beneficiaries,
       activeProjects: SEED_IMPACT.projects,
       totalPartners: SEED_IMPACT.partners,
-      totalVolunteers: SEED_IMPACT.volunteers,
     };
 
-    const loadMetrics = async () => {
-      const result = await contentBridge.getContent<any>('impact');
-      const data = result.data[0];
-      
-      if (result.isDynamic && data) {
-        setMetrics({
-          totalBeneficiaries: data?.totalBeneficiaries || data?.beneficiaries || fallback.totalBeneficiaries,
-          activeProjects: data?.activeProjects || data?.projects || fallback.activeProjects,
-          totalPartners: data?.totalPartners || data?.partners || fallback.totalPartners,
-          totalVolunteers: data?.totalVolunteers || data?.volunteers || fallback.totalVolunteers,
-        });
-        setContentSource('sanity');
-      } else {
+    // Load metrics asynchronously - graceful fallback
+    contentBridge.getContent<any>('impact')
+      .then(result => {
+        const data = result.data[0];
+        if (result.isDynamic && data) {
+          setMetrics({
+            totalBeneficiaries: data?.totalBeneficiaries || data?.beneficiaries || fallback.totalBeneficiaries,
+            activeProjects: data?.activeProjects || data?.projects || fallback.activeProjects,
+            totalPartners: data?.totalPartners || data?.partners || fallback.totalPartners,
+          });
+          setContentSource('sanity');
+        } else {
+          setMetrics(fallback);
+          setContentSource('static');
+        }
+      })
+      .catch(() => {
+        // Silent fallback on error
         setMetrics(fallback);
         setContentSource('static');
-      }
-    };
-
-    loadMetrics();
+      });
   }, []);
 
   const formatStat = (value: number | undefined) =>
@@ -500,11 +439,6 @@ export function Hero({ setCurrentPage }: HeroProps) {
         <span style={{ fontSize: "0.7rem" }}>اكتشف أكثر</span>
         <ArrowDown className="w-4 h-4" />
       </div>
-
-      <style>{`
-        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-30px) scale(1.1); } }
-      `}</style>
     </section>
   );
 }

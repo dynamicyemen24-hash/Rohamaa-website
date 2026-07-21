@@ -20,6 +20,11 @@ export function UpdateNotification() {
             });
           }
         });
+        // Also check for existing waiting worker
+        if (reg.waiting) {
+          setWaitingWorker(reg.waiting);
+          setShow(true);
+        }
       });
     }
   }, []);
@@ -49,7 +54,7 @@ export function UpdateNotification() {
       </div>
       <button
         onClick={handleUpdate}
-        className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 bg-[var(--brand-green)] text-white rounded-lg text-sm font-medium hover:bg-[var(--brand-green-dark)] transition-colors"
+        className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 bg-[var(--brand-green)] text-white rounded-lg text-sm font-medium hover:bg-[var(--brand-green-light)] transition-colors"
       >
         <RefreshCw className="w-4 h-4" />
         تحديث الآن

@@ -55,25 +55,6 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// Avoid full white-screen risk if bundle/chunk load fails in production:
-// show the progress UI and a minimal fallback immediately.
-function MinimalAppFallback() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)]" dir="rtl">
-      <div className="text-center p-6">
-        <p className="text-lg font-bold text-[var(--foreground)] mb-2">رحماء بينهم</p>
-        <p className="text-sm text-[var(--muted-foreground)] mb-4">جاري تحميل المنصة...</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-4 py-2 rounded-lg bg-[var(--brand-green)] text-white text-sm"
-        >
-          إعادة المحاولة
-        </button>
-      </div>
-    </div>
-  );
-}
-
 // Lazy load App for better initial performance
 const App = lazy(() => import("./app/App"));
 
@@ -89,15 +70,12 @@ const LOADING_MESSAGES = [
   { text: 'الانتهاء...', weight: 1 },
 ];
 
-const totalWeight = LOADING_MESSAGES.reduce((sum, m) => sum + m.weight, 0);
-
 // ============================================================
 // Main App with Fast Progress Bar
 // ============================================================
 function AppWithProgress() {
   const { percentage, message, isComplete, isReady, markInteractive } = usePageProgress('hero');
   const [isInteractive, setIsInteractive] = useState(false);
-  const [loadError, setLoadError] = useState(false);
   const stepRef = useRef(0);
 
   useEffect(() => {
@@ -147,7 +125,6 @@ function AppWithProgress() {
           <App />
         </ErrorBoundary>
       </Suspense>
-      {loadError && <MinimalAppFallback />}
     </>
   );
 }

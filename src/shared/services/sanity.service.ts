@@ -1,6 +1,7 @@
 // Sanity Service - Client for fetching content from Sanity CMS
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
+
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || 'xd0ohyiz';
@@ -120,6 +121,40 @@ export const sanityService = {
       return await client.fetch(query);
     } catch {
       return null;
+    }
+  },
+
+  getMedia: async () => {
+    try {
+      const query = `*[_type == "media"] | order(_createdAt desc) {
+        _id,
+        title,
+        type,
+        file,
+        date,
+        altText
+      }`;
+      const items = await client.fetch(query);
+      return items || [];
+    } catch {
+      return [];
+    }
+  },
+
+  getReports: async () => {
+    try {
+      const query = `*[_type == "report"] | order(date desc) {
+        _id,
+        title,
+        type,
+        file,
+        status,
+        date
+      }`;
+      const items = await client.fetch(query);
+      return items || [];
+    } catch {
+      return [];
     }
   },
 };

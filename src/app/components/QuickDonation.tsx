@@ -1,9 +1,10 @@
 // Quick Donation Component - Interactive Impact Calculator with Inline Payment
-import { Heart, Users, Globe, GraduationCap, Droplets, Package, CreditCard, Smartphone, Banknote } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Heart, Package, CreditCard, Smartphone, Banknote, Users, Droplets, GraduationCap } from "lucide-react";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 import { useSEO } from "@/utils/seoAdvanced";
+import { paymentGateway, BANK_ACCOUNTS } from "@/shared/services/payment-gateway.service";
 
 interface QuickDonationProps {
   readonly onClose?: () => void;
@@ -37,7 +38,7 @@ const IMPACT_MULTIPLIERS: Record<string, (amount: number) => ImpactResult> = {
   water: (amount) => ({
     beneficiaries: 0,
     meals: 0,
-    waterDays: Math.floor(amount / 25), // One water well day costs ~25 OMR
+    waterDays: Math.floor(amount / 25),
     educationDays: 0,
     orphansSupported: 0,
   }),
@@ -74,17 +75,18 @@ const PROJECTS = [
 ];
 
 const PAYMENT_METHODS = [
-  { id: "card", label: "بطاقة ائتمان", icon: CreditCard },
-  { id: "apple", label: "Apple Pay", icon: CreditCard },
-  { id: "google", label: "Google Pay", icon: CreditCard },
-  { id: "mobile", label: "محفظة إلكترونية", icon: Smartphone },
-  { id: "transfer", label: "تحويل بنكي", icon: Banknote },
+  { id: "stripe", label: "بطاقة ائتمان", icon: CreditCard },
+  { id: "bank", label: "تحويل بنكي", icon: Banknote },
+  { id: "cash", label: "نقدي", icon: Banknote },
 ];
 
 export function QuickDonation({ onClose, embedded = false }: QuickDonationProps) {
   const [amount, setAmount] = useState(50);
   const [selectedProject, setSelectedProject] = useState("general");
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState("stripe");
+  const [donorName, setDonorName] = useState("");
+  const [donorEmail, setDonorEmail] = useState("");
+  const [donorPhone, setDonorPhone] = useState("");
   const [impact, setImpact] = useState<ImpactResult>({
     beneficiaries: 0,
     meals: 0,
@@ -93,6 +95,8 @@ export function QuickDonation({ onClose, embedded = false }: QuickDonationProps)
     orphansSupported: 0,
   });
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showPaymentResult, setShowPaymentResult] = useState(false);
+  const [paymentResult, setPaymentResult] = useState<{ success: boolean; message: string; transactionId?: string } | null>(null);
 
   useSEO({
     title: "تبرع سريع - رحماء بينهم",
@@ -106,16 +110,88 @@ export function QuickDonation({ onClose, embedded = false }: QuickDonationProps)
 
   const handleDonate = async () => {
     setIsProcessing(true);
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    // In real implementation, integrate with payment gateway
+    setPaymentResult(null);
+
+    try {
+      // استخدام payment gateway الحقيقي
+      const result = await paymentGateway.initiatePayment({
+        amount: amount,
+        currency: 'USD',
+        method: paymentMethod as any,
+        type: selectedProject === 'zakat' ? 'zakat' : 'once',
+        projectId: selectedProject,
+        donorName: donorName || 'متبرع كريم',
+        donorEmail: donorEmail,
+        donorPhone: donorPhone,
+        description: `تبرع لمشروع ${PROJECTS.find(p => p.id === selectedProject)?.label || 'عام'}`,
+      });
+
+      if (result.status === 'completed' || result.status === 'processing') {
+        setPaymentResult({
+          success: true,
+          message: 'تم إنشاء طلب التبرع بنجاح!',
+          transactionId: result.transactionId,
+        });
+        setShowPaymentResult(true);
+      } else if (result.status === 'pending') {
+        // عرض تفاصيل التحويل البنكي أو النقدي
+        const bankAccounts = BANK_ACCOUNTS || [];
+        const bankInfo = bankAccounts.length > 0 
+          ? `إلى حساب ${bankAccounts[0].accountName} - ${bankAccounts[0].iban}`
+          : 'وسيقوم فريقنا بالتواصل معك';
+        setPaymentResult({
+          success: true,
+          message: `يرجى إجراء التحويل البنكي ${bankInfo}`,
+          transactionId: result.transactionId,
+        });
+        setShowPaymentResult(true);
+      } else {
+        setPaymentResult({
+          success: false,
+          message: result.confirmationCode || 'فشل في إنشاء طلب التبرع',
+        });
+        setShowPaymentResult(true);
+      }
+    } catch (error) {
+      setPaymentResult({
+        success: false,
+        message: error instanceof Error ? error.message : 'حدث خطأ أثناء معالجة الدفع',
+      });
+      setShowPaymentResult(true);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const presetAmounts = [10, 25, 50, 100, 250, 500, 1000];
 
   const content = (
     <div className="max-w-2xl mx-auto" dir="rtl">
+      {/* Payment Success/Error Message */}
+      {showPaymentResult && paymentResult && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`mb-6 p-6 rounded-xl text-center ${
+            paymentResult.success ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+          }`}
+        >
+          <div className="text-lg font-semibold mb-2">
+            {paymentResult.success ? '✅ نجح التبرع!' : '❌ فشل التبرع'}
+          </div>
+          <p className="text-gray-600 mb-3">{paymentResult.message}</p>
+          {paymentResult.transactionId && (
+            <p className="text-sm text-gray-500">رقم المعاملة: {paymentResult.transactionId}</p>
+          )}
+          <button
+            onClick={() => setShowPaymentResult(false)}
+            className="mt-4 px-6 py-2 bg-[var(--brand-green)] text-white rounded-lg hover:bg-[var(--brand-green-light)] transition-colors"
+          >
+            تبرع جديد
+          </button>
+        </motion.div>
+      )}
+
       <div className="text-center mb-8">
         <Heart className="w-16 h-16 mx-auto mb-4 text-[var(--brand-green)]" />
         <h2 className="text-3xl font-bold mb-2">تبرع سريع وأثر مباشر</h2>
@@ -123,7 +199,38 @@ export function QuickDonation({ onClose, embedded = false }: QuickDonationProps)
       </div>
 
       <div className="card p-8">
-{/* Project Selection */}
+        {/* Donor Information */}
+        <div className="mb-6">
+          <span className="block text-lg font-semibold mb-3">المعلومات الشخصية</span>
+          <div className="space-y-4">
+            <input
+              type="text"
+              value={donorName}
+              onChange={(e) => setDonorName(e.target.value)}
+              placeholder="اسم المتبرع (اختياري)"
+              className="w-full p-4 border-2 border-gray-200 rounded-lg text-lg focus:border-[var(--brand-green)]"
+              dir="rtl"
+            />
+            <input
+              type="email"
+              value={donorEmail}
+              onChange={(e) => setDonorEmail(e.target.value)}
+              placeholder="البريد الإلكتروني (لإرسال الإيصال)"
+              className="w-full p-4 border-2 border-gray-200 rounded-lg text-lg focus:border-[var(--brand-green)]"
+              dir="ltr"
+            />
+            <input
+              type="tel"
+              value={donorPhone}
+              onChange={(e) => setDonorPhone(e.target.value)}
+              placeholder="رقم الهاتف (اختياري)"
+              className="w-full p-4 border-2 border-gray-200 rounded-lg text-lg focus:border-[var(--brand-green)]"
+              dir="ltr"
+            />
+          </div>
+        </div>
+
+        {/* Project Selection */}
         <div className="mb-6" role="group" aria-label="اختر المشروع">
           <span className="block text-lg font-semibold mb-3">اختر المشروع</span>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -174,6 +281,7 @@ export function QuickDonation({ onClose, embedded = false }: QuickDonationProps)
             placeholder="أو أدخل مبلغ آخر"
             min="1"
             max="10000"
+            dir="ltr"
           />
         </div>
 

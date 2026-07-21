@@ -1,3 +1,12 @@
+// Content Seed Data - صور خيرية ومحتوى تنموي
+// صور بديلة من Unsplash (روابط موثوقة)
+const PLACEHOLDER_BENEFICIARY = 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&q=80';
+const PLACEHOLDER_AID = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&q=80';
+const PLACEHOLDER_EDUCATION = 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&h=600&q=80';
+const PLACEHOLDER_DEVELOPMENT = 'https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&h=600&q=80';
+const PLACEHOLDER_WATER = 'https://images.unsplash.com/photo-1593113630400-ea4288922497?w=800&h=600&q=80';
+const PLACEHOLDER_TRAINING = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800&h=600&q=80';
+
 export const SEED_NEWS_ITEMS = [
   {
     id: '1',
@@ -9,7 +18,7 @@ export const SEED_NEWS_ITEMS = [
     categoryBg: '#EFF6FF',
     date: '١٥ ربيع الثاني ١٤٤٦',
     dateEn: '2024-10-18',
-    image: 'https://images.unsplash.com/photo-1611907671216-7ec6ef949163?w=600&h=400&auto=format&fit=crop&q=80',
+    image: PLACEHOLDER_EDUCATION,
     views: 1240,
     featured: true,
     status: 'PUBLISHED',
@@ -26,7 +35,7 @@ export const SEED_NEWS_ITEMS = [
     categoryBg: '#FEF2F2',
     date: '٨ ربيع الثاني ١٤٤٦',
     dateEn: '2024-10-11',
-    image: 'https://images.unsplash.com/photo-1733654039689-f0852bed75d6?w=600&h=400&auto=format&fit=crop&q=80',
+    image: PLACEHOLDER_AID,
     views: 986,
     featured: true,
     status: 'PUBLISHED',
@@ -43,7 +52,7 @@ export const SEED_NEWS_ITEMS = [
     categoryBg: 'var(--brand-green-pale)',
     date: '٢ ربيع الثاني ١٤٤٦',
     dateEn: '2024-10-05',
-    image: 'https://images.unsplash.com/photo-1668896379676-c349528c9023?w=600&h=400&auto=format&fit=crop&q=80',
+    image: PLACEHOLDER_DEVELOPMENT,
     views: 754,
     featured: false,
     status: 'PUBLISHED',
@@ -60,7 +69,7 @@ export const SEED_NEWS_ITEMS = [
     categoryBg: '#F5F3FF',
     date: '٢٥ ربيع الأول ١٤٤٦',
     dateEn: '2024-09-28',
-    image: 'https://images.unsplash.com/photo-1642425150068-422fef94a8ea?w=600&h=400&auto=format&fit=crop&q=80',
+    image: PLACEHOLDER_TRAINING,
     views: 632,
     featured: false,
     status: 'PUBLISHED',
@@ -77,99 +86,15 @@ export const SEED_NEWS_ITEMS = [
     categoryBg: '#FEF2F2',
     date: '١٠ ربيع الأول ١٤٤٦',
     dateEn: '2024-09-15',
-    image: 'https://images.unsplash.com/photo-1642425149556-b6f90e946859?w=600&h=400&auto=format&fit=crop&q=80',
+    image: PLACEHOLDER_WATER,
     views: 543,
     featured: false,
     status: 'PUBLISHED',
     tags: ['مياه', 'إغاثة', 'بنية تحتية'],
     location: 'مأرب',
   },
-  {
-    id: '6',
-    title: 'برنامج كفالة الأيتام يحتفل بتفوق ٢٠٠ طالب',
-    excerpt: 'احتفلت المؤسسة بتفوق ٢٠٠ طالب من المكفولين ضمن برنامج كفالة الأيتام للعام الدراسي ١٤٤٥-١٤٤٦هـ.',
-    content: 'احتفلت مؤسسة رحماء بينهم بتفوق ٢٠٠ طالب وطالبة من المكفولين ضمن برنامج كفالة الأيتام للعام الدراسي ١٤٤٥-١٤٤٦هـ. أقيم الحفل بحضور أولياء الأمور والمتبرعين، وتم توزيع الجوائز والشهادات التقديرية على الطلاب المتفوقين. يهدف البرنامج إلى توفير الرعاية التعليمية والنفسية والاجتماعية للأيتام، وبلغ عدد المستفيدين منه هذا العام ٥٠٠ يتيم.',
-    category: 'تعليم',
-    categoryColor: '#2563EB',
-    categoryBg: '#EFF6FF',
-    date: '٢٥ صفر ١٤٤٦',
-    dateEn: '2024-08-30',
-    image: 'https://images.unsplash.com/photo-1642425149790-6067ff132526?w=600&h=400&auto=format&fit=crop&q=80',
-    views: 891,
-    featured: false,
-    status: 'PUBLISHED',
-    tags: ['أيتام', 'كفالة', 'تعليم'],
-    location: 'صنعاء',
-  },
-  {
-    id: '7',
-    title: 'افتتاح مركز التدريب المهني الجديد في الحديدة',
-    excerpt: 'افتتحت المؤسسة مركزاً للتدريب المهني في محافظة الحديدة يضم ٤ ورش تدريبية في مجالات الخياطة والكهرباء والتبريد وصيانة الجوالات.',
-    content: 'افتتحت مؤسسة رحماء بينهم مركزاً جديداً للتدريب المهني في محافظة الحديدة، يضم ٤ ورش تدريبية مجهزة بأحدث المعدات في مجالات الخياطة والتفصيل، والكهرباء المنزلية، والتبريد والتكييف، وصيانة الجوالات. يستهدف المركز ٣٠٠ شاب وشابة سنوياً، ويمنحهم شهادات معتمدة تؤهلهم لسوق العمل. تم تمويل المركز بالتعاون مع صندوق التنمية البشرية.',
-    category: 'تنمية',
-    categoryColor: 'var(--brand-green)',
-    categoryBg: 'var(--brand-green-pale)',
-    date: '١٥ صفر ١٤٤٦',
-    dateEn: '2024-08-20',
-    image: 'https://images.unsplash.com/photo-1668534821408-1bcf27877638?w=600&h=400&auto=format&fit=crop&q=80',
-    views: 721,
-    featured: false,
-    status: 'PUBLISHED',
-    tags: ['تدريب', 'تمكين', 'مهني'],
-    location: 'الحديدة',
-  },
-  {
-    id: '8',
-    title: 'توزيع ١٠٠٠ حقيبة مدرسية في المناطق الريفية',
-    excerpt: 'وزعت المؤسسة ١٠٠٠ حقيبة مدرسية على الطلاب في المناطق الريفية النائية تزامناً مع بدء العام الدراسي.',
-    content: 'تزامناً مع بدء العام الدراسي الجديد، وزعت مؤسسة رحماء بينهم ١٠٠٠ حقيبة مدرسية مجهزة بالقرطاسية والكتب على الطلاب والطالبات في المناطق الريفية النائية في خمس محافظات. يستهدف المشروع تشجيع الأسر على إلحاق أبنائهم بالمدارس والتخفيف من الأعباء المالية عليهم. شمل التوزيع مناطق في حجة وعمران والضالع والبيضاء وصعدة.',
-    category: 'تعليم',
-    categoryColor: '#2563EB',
-    categoryBg: '#EFF6FF',
-    date: '١ محرم ١٤٤٦',
-    dateEn: '2024-08-01',
-    image: 'https://images.unsplash.com/photo-1656416584402-b720e0d786dc?w=600&h=400&auto=format&fit=crop&q=80',
-    views: 667,
-    featured: false,
-    status: 'PUBLISHED',
-    tags: ['تعليم', 'حملات', 'طلاب'],
-    location: 'عدة محافظات',
-  },
-  {
-    id: '9',
-    title: 'دورة تدريبية في الإسعافات الأولية للمتطوعين',
-    excerpt: 'نظمت المؤسسة دورة تدريبية في الإسعافات الأولية لـ ٨٠ متطوعاً من فرق الاستجابة الطارئة.',
-    content: 'نظمت مؤسسة رحماء بينهم بالتعاون مع هيئة الإسعاف الطبي دورة تدريبية مكثفة في الإسعافات الأولية لـ ٨٠ متطوعاً من فرق الاستجابة الطارئة التابعة للمؤسسة. تضمنت الدورة التدريب على الإنعاش القلبي الرئوي وإدارة حالات الطوارئ والإصابات والنزيف والكسور والحروق. حصل المشاركون على شهادات معتمدة في الإسعافات الأولية.',
-    category: 'تدريب',
-    categoryColor: '#7C3AED',
-    categoryBg: '#F5F3FF',
-    date: '٢٠ ذو الحجة ١٤٤٥',
-    dateEn: '2024-07-15',
-    image: 'https://images.unsplash.com/photo-1668896379676-c349528c9023?w=600&h=400&auto=format&fit=crop&q=80',
-    views: 432,
-    featured: false,
-    status: 'PUBLISHED',
-    tags: ['تدريب', 'صحي', 'متطوعون'],
-    location: 'صنعاء',
-  },
-  {
-    id: '10',
-    title: 'الانتهاء من بناء ٢٠ مسكناً للأسر النازحة',
-    excerpt: 'تمكنت المؤسسة من بناء ٢٠ وحدة سكنية للأسر النازحة في مخيمات النزوح بمحافظة حجة.',
-    content: 'تمكنت مؤسسة رحماء بينهم من إنجاز مشروع بناء ٢٠ مسكناً للأسر النازحة في مخيمات النزوح بمحافظة حجة، بتمويل من هيئة الأعمال الخيرية. تتكون الوحدات السكنية من غرفتين وخدمات صحية، ومجهزة بأساسيات الحياة الكريمة. يستفيد من المشروع أكثر من ١٢٠ فرداً من النازحين الذين فقدوا منازلهم بسبب النزاع.',
-    category: 'إغاثة',
-    categoryColor: '#E74C3C',
-    categoryBg: '#FEF2F2',
-    date: '١٠ ذو الحجة ١٤٤٥',
-    dateEn: '2024-07-05',
-    image: 'https://images.unsplash.com/photo-1733654039689-f0852bed75d6?w=600&h=400&auto=format&fit=crop&q=80',
-    views: 834,
-    featured: false,
-    status: 'PUBLISHED',
-    tags: ['إغاثة', 'إيواء', 'نازحين'],
-    location: 'حجة',
-  },
 ];
+
 export const SEED_SUCCESS_STORIES = [
   {
     id: '1',
@@ -183,7 +108,7 @@ export const SEED_SUCCESS_STORIES = [
     year: '١٤٤٥هـ',
     location: 'تعز',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?w=600&h=400&auto=format&fit=crop&q=80',
+    image: PLACEHOLDER_BENEFICIARY,
     status: 'PUBLISHED',
   },
   {
@@ -198,13 +123,13 @@ export const SEED_SUCCESS_STORIES = [
     year: '١٤٤٦هـ',
     location: 'صنعاء',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&auto=format&fit=crop&q=80',
+    image: PLACEHOLDER_EDUCATION,
     status: 'PUBLISHED',
   },
   {
     id: '3',
     title: 'مبادرة مجتمعية تغير واقع قرية نائية',
-    excerpt: 'بفضل جهود المتطوعين ودعم المؤسسة، تحولت قرية نائية في محافظة حجة إلى قرية منتجة تمتلك مشروعًا مجتمعيًا مستدامًا.',
+    excerpt: 'بفضل جهود المتطوعين ودعم المؤسسة، تحولت قرية نائية في محافظة حجة إلى قرية منتجة تمتلك مشروعاً مجتمعياً مستداماً.',
     quote: 'كنا نحلم بمشروع يغير واقعنا، واليوم أصبح الحلم حقيقة بفضل الله ثم بفضل مؤسسة رحماء بينهم.',
     name: 'مصعب عبدالله',
     role: 'قائد مبادرة مجتمعية',
@@ -213,7 +138,7 @@ export const SEED_SUCCESS_STORIES = [
     year: '١٤٤٦هـ',
     location: 'حجة',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&h=400&auto=format&fit=crop&q=80',
+    image: PLACEHOLDER_DEVELOPMENT,
     status: 'PUBLISHED',
   },
   {
@@ -228,36 +153,41 @@ export const SEED_SUCCESS_STORIES = [
     year: '١٤٤٥هـ',
     location: 'صنعاء',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1542815391-5e04e9682458?w=600&h=400&auto=format&fit=crop&q=80',
-    status: 'DRAFT',
+    image: 'https://images.unsplash.com/photo-1542815391-5e04e9682458?w=800&h=600&q=80',
+    status: 'PUBLISHED',
   },
 ];
+
 export const SEED_PARTNERS = [
-  { id: '1', name: 'منظمة الإغاثة الخيرية', logo: 'https://images.unsplash.com/photo-1609159093838-56802680a0f3?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك إستراتيجي', status: 'active', url: '#' },
-  { id: '2', name: 'صندوق التنمية البشرية', logo: 'https://images.unsplash.com/photo-1554224776-3d0a3226fb75?w=200&h=100&auto=format&fit=crop&q=80', type: 'جهة ممولة', status: 'active', url: '#' },
-  { id: '3', name: 'جامعة العلوم والتكنولوجيا', logo: 'https://images.unsplash.com/photo-1523050859058-8321774f46e3?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك تنفيذي', status: 'active', url: '#' },
-  { id: '4', name: 'هيئة الأعمال الخيرية', logo: 'https://images.unsplash.com/photo-1582211594533-268f4f124cb8?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك داعم', status: 'active', url: '#' },
-  { id: '5', name: 'اللجنة الإغاثية العربية', logo: 'https://images.unsplash.com/photo-1593642634327-79d9c95dc8de?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك إستراتيجي', status: 'active', url: '#' },
-  { id: '6', name: 'بنك الطعام اليمني', logo: 'https://images.unsplash.com/photo-1593113598308-e5fef1e7e334?w=200&h=100&auto=format&fit=crop&q=80', type: 'شريك تنفيذي', status: 'active', url: '#' },
+  { id: '1', name: 'منظمة الإغاثة الخيرية', logo: PLACEHOLDER_BENEFICIARY, type: 'شريك إستراتيجي', status: 'active', url: '#' },
+  { id: '2', name: 'صندوق التنمية البشرية', logo: PLACEHOLDER_AID, type: 'جهة ممولة', status: 'active', url: '#' },
+  { id: '3', name: 'جامعة العلوم والتكنولوجيا', logo: PLACEHOLDER_EDUCATION, type: 'شريك تنفيذي', status: 'active', url: '#' },
+  { id: '4', name: 'هيئة الأعمال الخيرية', logo: PLACEHOLDER_DEVELOPMENT, type: 'شريك داعم', status: 'active', url: '#' },
+  { id: '5', name: 'اللجنة الإغاثية العربية', logo: PLACEHOLDER_TRAINING, type: 'شريك إستراتيجي', status: 'active', url: '#' },
+  { id: '6', name: 'بنك الطعام اليمني', logo: PLACEHOLDER_WATER, type: 'شريك تنفيذي', status: 'active', url: '#' },
 ];
+
 export const SEED_IMPACT = {
   beneficiaries: 12847,
   projects: 24,
   partners: 48,
   volunteers: 320,
 };
+
 export const SEED_REPORTS = [
   { id: '1', title: 'التقرير السنوي ١٤٤٥هـ', type: 'تقرير سنوي', date: '١٤٤٦/١/١', file: '', size: '٤.٢ م.ب', status: 'published' },
   { id: '2', title: 'نشرة شهر ربيع الأول ١٤٤٦هـ', type: 'نشرة دورية', date: '١٤٤٦/٣/١', file: '', size: '١.٨ م.ب', status: 'published' },
   { id: '3', title: 'التقرير المالي للربع الثالث ٢٠٢٤', type: 'تقرير مالي', date: '١٤٤٦/٤/١٠', file: '', size: '٣.٥ م.ب', status: 'published' },
   { id: '4', title: 'دراسة: أثر البرامج التعليمية في الريف اليمني', type: 'دراسة', date: '١٤٤٥/١٢/١٥', file: '', size: '٢.٩ م.ب', status: 'draft' },
 ];
+
 export const SEED_MEDIA = [
-  { id: '1', title: 'حفل تكريم المتفوقين', type: 'image', url: 'https://images.unsplash.com/photo-1642425149790-6067ff132526?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٦/٣/١٥', size: '١.٢ م.ب' },
-  { id: '2', title: 'توزيع المساعدات في تعز', type: 'image', url: 'https://images.unsplash.com/photo-1733654039689-f0852bed75d6?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٦/٢/٢٠', size: '٠.٩ م.ب' },
-  { id: '3', title: 'برنامج التدريب المهني', type: 'image', url: 'https://images.unsplash.com/photo-1642425150068-422fef94a8ea?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٦/١/٥', size: '١.١ م.ب' },
-  { id: '4', title: 'تعريف بالمؤسسة', type: 'video', url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&auto=format&fit=crop&q=80', date: '١٤٤٥/١١/١', size: '٢٥ م.ب' },
+  { id: '1', title: 'حفل تكريم المتفوقين', type: 'image', url: PLACEHOLDER_EDUCATION, date: '١٤٤٦/٣/١٥', size: '١.٢ م.ب' },
+  { id: '2', title: 'توزيع المساعدات في تعز', type: 'image', url: PLACEHOLDER_AID, date: '١٤٤٦/٢/٢٠', size: '٠.٩ م.ب' },
+  { id: '3', title: 'برنامج التدريب المهني', type: 'image', url: PLACEHOLDER_TRAINING, date: '١٤٤٦/١/٥', size: '١.١ م.ب' },
+  { id: '4', title: 'تعريف بالمؤسسة', type: 'video', url: PLACEHOLDER_DEVELOPMENT, date: '١٤٤٥/١١/١', size: '٢٥ م.ب' },
 ];
+
 export const SEED_DONATIONS = [
   { id: '1', donor: 'أحمد محمد علي', amount: 500, project: 'الصندوق العام', method: 'card', date: '١٤٤٦/٤/١', status: 'completed' },
   { id: '2', donor: 'فاطمة عبدالله', amount: 250, project: 'الإغاثة الإنسانية', method: 'mobile', date: '١٤٤٦/٤/٣', status: 'completed' },
@@ -266,6 +196,7 @@ export const SEED_DONATIONS = [
   { id: '5', donor: 'سارة أحمد', amount: 2000, project: 'الصندوق العام', method: 'transfer', date: '١٤٤٦/٣/٢٠', status: 'completed' },
   { id: '6', donor: 'عمر حسن', amount: 350, project: 'التنمية المجتمعية', method: 'mobile', date: '١٤٤٦/٣/١٥', status: 'failed' },
 ];
+
 export const SEED_USER_REQUESTS = [
   { id: '1', name: 'مؤسسة الخير الدولية', email: 'info@alkhair.org', type: 'منظمة داعمة', message: 'نرغب في الشراكة مع المؤسسة في مشاريع المياه', date: 'منذ يوم', status: 'new' },
   { id: '2', name: 'محمد عبدالله العريفي', email: 'mohd@email.com', type: 'فاعل خير', message: 'أرغب في التبرع بمبلغ شهري للمؤسسة', date: 'منذ ساعتين', status: 'new' },
@@ -273,12 +204,14 @@ export const SEED_USER_REQUESTS = [
   { id: '4', name: 'أحمد علي الحميدي', email: 'ahmed@email.com', type: 'فاعل خير', message: 'استفسار عن مشروع كفالة يتيم', date: 'منذ ٥ ساعات', status: 'new' },
   { id: '5', name: 'هيئة الإغاثة الإسلامية', email: 'info@islamicrelief.org', type: 'منظمة داعمة', message: 'دعوة للمشاركة في مؤتمر الإغاثة الدولي', date: 'منذ أسبوع', status: 'replied' },
 ];
+
 export const SEED_VOLUNTEERS = [
   { id: '1', name: 'عبدالرحمن النجار', phone: '+٩٦٧ ٧٧٧ ١١١ ٢٢٢', email: 'abdu@email.com', field: 'تعليمي', status: 'active', hours: 120 },
   { id: '2', name: 'نورة أحمد', phone: '+٩٦٧ ٧٧٧ ٣٣٣ ٤٤٤', email: 'nora@email.com', field: 'صحي', status: 'active', hours: 85 },
   { id: '3', name: 'سعيد محمد', phone: '+٩٦٧ ٧٧٧ ٥٥٥ ٦٦٦', email: 'saeed@email.com', field: 'إداري', status: 'pending', hours: 0 },
   { id: '4', name: 'مريم عبدالملك', phone: '+٩٦٧ ٧٧٧ ٧٧٧ ٨٨٨', email: 'maryam@email.com', field: 'إعلامي', status: 'active', hours: 200 },
 ];
+
 export const SEED_PROJECTS = [
   { id: 1, title: 'مشروع الكساء الشتوي ١٤٤٦', category: 'إغاثة', status: 'active', beneficiaries: '٢٠٠٠ أسرة', budget: '٣٥٠,٠٠٠ ر.ي', progress: 72, date: '٢٠٢٤-١٠-١', description: 'توزيع كسوة شتوية على الأسر المتضررة من البرد في المناطق المرتفعة', location: 'عدة محافظات' },
   { id: 2, title: 'مشروع التعليم في الريف', category: 'تعليم', status: 'completed', beneficiaries: '٥٠٠ طالب', budget: '١٨٠,٠٠٠ ر.ي', progress: 100, date: '٢٠٢٤-٨-١', description: 'دعم التعليم في المناطق الريفية النائية بالمحافظات', location: 'حجة، عمران' },
@@ -288,7 +221,7 @@ export const SEED_PROJECTS = [
   { id: 6, title: 'برنامج التحفيظ القرآني', category: 'دعوي', status: 'active', beneficiaries: '٨٠٠ طالب', budget: '١٢٠,٠٠٠ ر.ي', progress: 45, date: '٢٠٢٤-٩-١', description: 'حلقات تحفيظ قرآن في المساجد والمراكز', location: 'صنعاء، عدن' },
 ];
 
-export const SAFAWI_QIBLA_DIRECTIONS = [
+export const SAFAVI_QIBLA_DIRECTIONS = [
   { id: '1', label: 'اتجاه القبلة', angle: 0, emoji: '🕋' },
   { id: '2', label: 'المسافة إلى مكة', value: '٣٨٠٠ كم', emoji: '📏' },
 ];

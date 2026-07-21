@@ -1,85 +1,64 @@
-# تقرير الإنجازات - إكمال الفجوات والتحسينات التفاعلية
+# تقرير التحسينات المنجزة - مؤسسة رحماء بينهم
 
-## ملخص التنفيذ
-تم إكمال الفجوات الحرجة والتحسينات التفاعلية في مشروع مؤسسة رحماء بينهم بنجاح.
+## ملخص التحسينات
 
-## ما تم إنجازه حديثًا (تم التحديث)
+### 1. تحسينات ملفات البيئة والنشر ✅
+**تم تحديث:**
+- `.env.example` - إضافة متغيرات الدفع والاشعارات والبريد الإلكتروني
+- `vercel.json` - تحسين Security Headers وإضافة endpoints جديدة
 
-### 1. ✅ تحسين البنر الرئيسي (Hero Section)
-- ملف: `src/app/components/Hero.tsx`
-- المحتوى المضاف:
-  - **كاروسيل النصوص الإسلامية** (آيات قرآنية وأحاديث نبوية متحركة)
-  - **توجيه الفيديو التلقائي** مع دعم متعدد الصيغ
-  - **تصميم متجاوب** مع Lazy Loading
-  - خلفية متحركة مع تأثيرات بصرية متقدمة
+### 2. تحسينات نظام الدفع ✅
+**تم تحسين:**
+- `QuickDonation.tsx` - دمج الدفع الحقيقي مع توضيح حالة الطلب
+- `create-checkout-session.js` - تحسين معالجة الدفع مع Stripe وإضافة validation
+- `payment-gateway.service.ts` - البقاء كخدمة بديلة للدفع
 
-### 2. ✅ تحسين عدادات الأثر الحية (ImpactStats)
-- ملف: `src/app/components/ImpactStats.tsx`
-- البيانات الجديدة المضافة:
-  - ✅ **إجمالي المساعدات الموزعة** (Total Donations) - 3,200,000 ريال
-  - ✅ **عدد الأسر المنتجة** (Productive Families) - 472 أسرة
-  - ✅ لوحة مؤشرات تفاعلية توزيع البرامج حسب القطاعات
-  - ✅ دعم البيانات الديناميكية من Sanity CMS
+### 3. تحسينات الأداء والتفاعل ✅
+**تم إضافة:**
+- `Skeleton.tsx` - مؤشرات تقدم متقدمة (HeroSkeleton, ListSkeleton, StatsSkeleton, FormSkeleton)
+- `UpdateNotification.tsx` - تحسين إشعارات التحديث
 
-### 3. ✅ حاسبة الزكاة الذكية (ZakatCalculator)
-- ملف: `src/app/components/ZakatCalculator.tsx`
-- الميزات الجديدة:
-  - ✅ **حساب الزكاة للذهب والفطر** (Gold & Fitrah)
-  - ✅ **زر "أخرج زكاتك الآن"** مع توجيه لواجهة الدفع
-  - ✅ **تذكير موعد الزكاة** في التاريخ الهجري من العام القادم
-  - ✅ **أيقونات بوابات الدفع** (Apple Pay, Google Pay, Credit Card)
+### 4. ملفات API جديدة ✅
+**تم إنشاء:**
+- `api/subscribers.js` - API للاشتراك في النشرة البريدية
+- `api/volunteers.js` - API لتقديم طلبات التطوع
 
-### 4. ✅ مكتبة المعرفة (KnowledgeLibrary) - جديد
-- ملف: `src/app/components/KnowledgeLibrary.tsx`
-- المحتوى:
-  - دراسات الأثر الاجتماعي
-  - الأدلة المتطوعية
-  - النشرات الدورية
-  - التقارير المالية
+---
 
-### 5. ✅ تحسين التبرع السريع (QuickDonation)
-- ملف: `src/app/components/QuickDonation.tsx`
-- التحسينات:
-  - ✅ **Apple Pay و Google Pay** أضيفت كخيارات دفع
-  - ✅ **حاسبة الأثر الفردي** تُظهر أثر كل مبلغ
-
-### 6. ✅ تحسين Footer
-- ملف: `src/app/components/Footer.tsx`
-- المحتوى المضاف:
-  - ✅ **أرقام التراخيص الرسمية** (رخصة جمع التبرعات: 2024/YEM/001)
-  - ✅ **أيقونات بوابات الدفع** مع مؤشر الأمان SSL
-
-## الفجوات التي تم إكمالها
-
-| الفئة | الحالة | الملاحظات |
-|-------|--------|----------|
-| البنر الرئيسي | ✅ مكتمل | كاروسيل النصوص الإسلامية |
-| عدادات الأثر | ✅ مكتمل | إجمالي المساعدات والأسر المنتجة مضافة |
-| حاسبة الزكاة | ✅ مكتمل | دعم الذهب والفطر والدفع المباشر |
-| مكتبة المعرفة | ✅ مكتمل | مكون جديد مُنشأ |
-| التبرع السريع | ✅ مكتمل | Apple Pay & Google Pay |
-| Footer التراخيص | ✅ مكتمل | التراخيص والبوابات الدفع |
-
-## ملاحظات التشغيل
-
-لتشغيل المشروع بعد التحسينات:
+## متغيرات البيئة المطلوبة على Vercel
 
 ```bash
-# تثبيت الاعتمادات
-pnpm install
-
-# تشغيل الخادم المحلي
-pnpm dev
-
-# بناء الإنتاج
-pnpm build
-```
-
-## متغيرات البيئة المطلوبة (Vercel)
-
-```
+# Sanity
 VITE_SANITY_PROJECT_ID=xd0ohyiz
 VITE_SANITY_DATASET=production
 VITE_SANITY_API_VERSION=2024-01-01
-VITE_STRIPE_PUBLIC_KEY=<stripe-public-key>
-VITE_VAPID_PUBLIC_KEY=<vapid-public-key>
+SANITY_STUDIO_REVALIDATE_SECRET=secret
+
+# Supabase
+VITE_SUPABASE_URL=https://project.supabase.co
+VITE_SUPABASE_ANON_KEY=anon-key
+
+# Stripe
+VITE_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_SECRET_KEY=sk_live_...
+
+# PostgreSQL (Neon)
+DATABASE_URL=postgresql://...
+
+# Push Notifications
+VITE_VAPID_PUBLIC_KEY=your-vapid-public-key
+VAPID_PRIVATE_KEY=your-vapid-private-key
+
+# Email (Resend)
+EMAIL_API_KEY=re_...
+EMAIL_FROM=noreply@rohamaa.org
+```
+
+---
+
+## الخطوات التالية الموصى بها
+
+1. **إعداد قاعدة البيانات الفعلية** - تنفيذ migration على Neon PostgreSQL
+2. **إعداد Stripe** - إنشاء حساب وربط المفاتيح الحية
+3. **اختبار الدفع** - اختبار عملية دفع حقيقية
+4. **تهيئة Supabase** - إذا كانت ستُستخدم كبديل
